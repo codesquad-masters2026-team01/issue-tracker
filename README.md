@@ -31,6 +31,7 @@
 
 ---
 
+
 ## 이슈 템플릿
 
 ### PR 메세지 양식
@@ -49,3 +50,7 @@
 ### [➡️회의록](https://github.com/codesquad-masters2026-team01/issue-tracker/wiki/Meeting%E2%80%90Notes#20260504)
 
 ---
+## 🏗️ ERD (Entity Relationship Diagram)
+
+![Project ERD](./images/ERD.png)
+
