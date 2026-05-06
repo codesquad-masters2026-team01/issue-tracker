@@ -44,6 +44,26 @@
 ```
 
 ---
+## 기술 환경
+
+### FrontEnd
+```markdown
+## Language: 타입스크립트
+
+## Library: React
+```
+
+### BackEnd
+```markdown
+## Language: JAVA 21
+
+## Framework: Spring Boot 3.x
+
+## Data Access: Spring Data JDBC
+
+## Build Tool: Gradle
+```
+---
 
 ## 회의록
 ### GitHub 위키 사용
