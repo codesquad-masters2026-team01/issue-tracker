@@ -11,4 +11,5 @@ spring:
 
 logging:
   level:
-    org.springframework.jdbc.core.JdbcTemplate: DEBUG # 실행되는 SQL을 로그로 확인
+    org.springframework.jdbc.datasource.init: DEBUG # schema.sql 실행 과정을 보여줍니다
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
