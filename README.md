@@ -44,25 +44,25 @@
 ```
 
 ---
-## 기술 환경
+## 🛠 Tech Stack & Tools
 
-### FrontEnd
-```markdown
-## Language: 타입스크립트
+### Backend & Database
+#### Language/Framework: Java, Spring Boot, Spring Data JDBC
+#### RDBMS: MySQL
+#### Security: OAuth 2.0 (Social Login)
 
-## Library: React
-```
+### Frontend
+#### Language/Library: TypeScript, React
+#### Infrastructure & CI/CD
+#### Cloud: AWS (EC2, S3)
 
-### BackEnd
-```markdown
-## Language: JAVA 21
+### Pipeline: GitHub Actions (CI/CD 자동화 구축)
+#### Build Tool: Gradle
 
-## Framework: Spring Boot 3.x
+### Collaboration
+#### VCS: GitHub (Git-flow 기반 협업)
+#### Communication: Slack (Webhook 연동을 통한 배포 및 이슈 알림 자동화)
 
-## Data Access: Spring Data JDBC
-
-## Build Tool: Gradle
-```
 ---
 
 ## 회의록
