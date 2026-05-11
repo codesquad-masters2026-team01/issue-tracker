@@ -16,7 +16,7 @@ CREATE TABLE `members` (
                            `user_id` varchar(50) UNIQUE NOT NULL,
                            `name` varchar(50) NOT NULL,
                            `password` varchar(255) NOT NULL,
-                           `email` varchar(100) NOT NULL,
+                           `email` varchar(255) NOT NULL,
                            `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 
