@@ -70,7 +70,12 @@
 ### [➡️회의록](https://github.com/codesquad-masters2026-team01/issue-tracker/wiki/Meeting%E2%80%90Notes#20260504)
 
 ---
+
+## API 명세서
+### [Notion](https://www.notion.so/Issue-Tracker-API-3565ff02789e80b285b5dd715e59ad24?source=copy_link)
+
+---
+
 ## 🏗️ ERD (Entity Relationship Diagram
-
+### **_자료형은 추후에 지정할 예정_**
 ![Project ERD](./images/ERD.png)
-
