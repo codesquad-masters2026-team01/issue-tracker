@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface IssueRepository extends CrudRepository<Issue, Long> {
 
-    @Query("SELECT * From issue where is_opened = :isOpened and deleted_at is null ORDER BY created_at DESC")
+    @Query("SELECT * FROM issue WHERE is_opened = :isOpened " +
+            "AND deleted_at IS NULL ORDER BY created_at DESC")
     List<Issue> findAllByIsOpened(boolean isOpened);
 
-    boolean isOpened(boolean isOpened);
+    long countByIsOpenedAndDeletedAtIsNull(boolean isOpened);
 }
