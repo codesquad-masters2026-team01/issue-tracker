@@ -1,4 +1,6 @@
 // src/components/IssueListHeader.tsx
+import ListFilterDropdown from "./ListFilterDropdown.tsx";
+import AssigneeFilterContent from "./filter/AssigneeFilterContent.tsx";
 
 // 부모(IssueListPage)로부터 받을 상태와 함수 타입 정의
 interface IssueListHeaderProps {
@@ -7,7 +9,6 @@ interface IssueListHeaderProps {
 }
 
 export default function IssueListHeader({ isAllSelected, onToggleAll }: IssueListHeaderProps) {
-    const filterOptions = ['담당자', '레이블', '마일스톤', '작성자'];
 
   return (
     // 1. 전체 컨테이너 (List Header)
@@ -19,7 +20,6 @@ export default function IssueListHeader({ isAllSelected, onToggleAll }: IssueLis
         id="headerSelecAllCheckbox"
         checked={isAllSelected}
         onChange={onToggleAll}
-        onChage={onToggleAll}
         className="w-4 h-4 rounded-[2px] border-[1.6px] border-[#D9DBE9] text-blue-600 focus:ring-0 cursor-pointer"
       />
 
@@ -52,24 +52,21 @@ export default function IssueListHeader({ isAllSelected, onToggleAll }: IssueLis
 
         {/* 🔵 [우측 영역]: 드롭다운 필터들 */}
         <div className="flex items-center gap-8 ml-auto">
+            <ListFilterDropdown title="담당자">
+                <AssigneeFilterContent />
+            </ListFilterDropdown>
 
-            {/* 배열을 순회하며 똑같이 생긴 버튼 4개를 찍어냅니다. */}
-            {filterOptions.map((optionName) => (
-                // flex, gap-1(4px) 적용. 마우스 호버 시 텍스트가 짙은 색으로 변하는 인터랙션 추가
-                <button
-                    key={optionName}
-                    className="flex items-center gap-1 text-[#4E4B66] hover:text-[#14142B] transition-colors cursor-pointer"
-                >
-            <span className="font-['Pretendard'] text-[16px] font-medium">
-              {optionName}
-            </span>
-                    {/* 아래 화살표 (chevronDown) 아이콘 */}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-            ))}
+            <ListFilterDropdown title="담당자">
+                {/*레이블*/}
+            </ListFilterDropdown>
 
+            <ListFilterDropdown title="담당자">
+                {/*마일스톤*/}
+            </ListFilterDropdown>
+
+            <ListFilterDropdown title="담당자">
+                {/*작성자*/}
+            </ListFilterDropdown>
         </div>
     </div>
   );
