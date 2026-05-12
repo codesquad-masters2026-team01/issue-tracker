@@ -1,19 +1,25 @@
 // src/components/IssueListHeader.tsx
 
-export default function IssueListHeader() {
+// 부모(IssueListPage)로부터 받을 상태와 함수 타입 정의
+interface IssueListHeaderProps {
+    isAllSelected: boolean;
+    onToggleAll: () => void;
+}
+
+export default function IssueListHeader({ isAllSelected, onToggleAll }: IssueListHeaderProps) {
     const filterOptions = ['담당자', '레이블', '마일스톤', '작성자'];
 
   return (
     // 1. 전체 컨테이너 (List Header)
-    // w-full: 부모 컨테이너에 맞춰 꽉 채움
-    // h-[64px]: 기획서 명세 반영
-    // rounded-t-[16px]: 상단 양쪽 모서리만 16px만큼 둥글게 처리 (border-top-left/right-radius)
-    // px-8: 체크박스가 화면 왼쪽 끝에 딱 붙지 않도록 내부 여백(Padding)을 임의로 주었습니다.
     <div className="flex items-center w-full h-[64px] bg-[#F7F7FC] rounded-t-[16px] px-8 border-b border-slate-200 gap-6">
 
-      {/* 2. Ractangle 17 (체크박스) */}
+      {/* 2. 체크박스 */}
       <input
         type="checkbox"
+        id="headerSelecAllCheckbox"
+        checked={isAllSelected}
+        onChange={onToggleAll}
+        onChage={onToggleAll}
         className="w-4 h-4 rounded-[2px] border-[1.6px] border-[#D9DBE9] text-blue-600 focus:ring-0 cursor-pointer"
       />
 
@@ -21,7 +27,6 @@ export default function IssueListHeader() {
         <div className="flex items-center gap-6 ml-8">
 
             {/* [A] 열린 이슈 (선택된 상태 - Active) */}
-            {/* gap-1은 기획서의 gap: 4px를 구현합니다. */}
             <button className="flex items-center gap-1 cursor-pointer">
                 {/* alertCircle 아이콘 */}
                 <svg className="w-4 h-4 text-[#14142B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
