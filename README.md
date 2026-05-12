@@ -27,7 +27,7 @@
 ### ● Feat: 새로운 기능 추가
 ### ● Fix: 버그 수정
 ### ● Refactor: 코드 리팩토링
-### ● Docs: 문서 수정(READEME 등)
+### ● Docs: 문서 수정(README 등)
 
 ---
 
