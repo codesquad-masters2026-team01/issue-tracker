@@ -7,9 +7,9 @@ public record IssueListResponse(
         List<IssueResponse> issues
 ) {
     public record Metadata(
-            int openIssueCount,
-            int closedIssueCount,
-            int labelCount,
-            int milestoneCount
+            long openIssueCount,
+            long closedIssueCount,
+            long labelCount,
+            long milestoneCount
     ) {}
 }
