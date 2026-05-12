@@ -10,6 +10,8 @@ on:
     branches: [ "dev" ]
     paths-ignore:
       - "frontend/**"
+  workflow_dispatch:
+
 
 jobs:
   backend-build:

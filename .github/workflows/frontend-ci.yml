@@ -9,6 +9,8 @@ on:
     branches: [ "dev" ]
     paths:
       - "frontend/**"
+  workflow_dispatch:
+
 
 jobs:
   frontend-build:
