@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.issue.domain;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -8,19 +9,15 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 
+@Getter
 public class Milestone {
 
     @Id
     private Long id;
 
     private String name;
-
-    @Column("completion_date")
     private LocalDate completionDate;
-
     private String description;
-
-    @Column("is_opened")
     private Boolean isOpened;
 
     private LocalDateTime deletedAt;
@@ -34,12 +31,5 @@ public class Milestone {
         this.isOpened = isOpened;
         this.deletedAt = deletedAt;
     }
-
-    public Long getId() {return id;}
-    public String getName() {return name;}
-    public LocalDate getCompletionDate() {return completionDate;}
-    public String getDescription() {return description;}
-    public Boolean getIsOpened() {return isOpened;}
-    public LocalDateTime getDeletedAt() {return deletedAt;}
 
 }
