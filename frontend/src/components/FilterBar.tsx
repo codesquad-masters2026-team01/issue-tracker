@@ -1,5 +1,7 @@
 // src/components/FilterBar.tsx
-import { useState, KeyboardEvent } from 'react';
+// import { useState, KeyboardEvent } from 'react';
+
+import { useState, type KeyboardEvent } from 'react';
 
 interface FilterBarProps {
     // 검색어가 제출되었을 때 실행될 콜백 함수 (추후 IssueListPage에서 처리)

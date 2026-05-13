@@ -1,9 +1,9 @@
 // src/components/ListFilterDropdown.tsx
-import {ReactNode, useState} from 'react';
+import {useState, type ReactNode} from 'react';
 
 interface ListFilterDropdownProps {
     title: string;
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 export default function ListFilterDropdown({ title, children }: ListFilterDropdownProps) {
