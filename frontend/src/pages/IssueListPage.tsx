@@ -1,23 +1,52 @@
 // src/pages/IssueListPage.tsx
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FilterBar from "../components/FilterBar.tsx";
 import LabelMilestoneTabs from "../components/LabelMilestoneTabs.tsx";
 import IssueListHeader from "../components/IssueListHeader.tsx";
 import IssueItem, {type IssueType} from "../components/IssueItem.tsx";
 import IssueSelectionHeader from "../components/IssueSelectionHeader.tsx";
-// import { useIssues } from "../hooks/useIssues";
-
-// TODO: 각자 데이터 --> 추후에 실제 서버에서 받아올 수 있도록 hooks 디렉토리 .ts 파일 사용
-const mockIssues: IssueType[] = [
-    { id: 1, status: 'open', title: 'FE 이슈트래커 개발', labels: [{ text: 'documentation', color: 'blue' }], authorName: 'samsamis9', timestamp: '8분 전', milestoneTitle: '그룹프로젝트:이슈트래커' },
-    { id: 2, status: 'open', title: '디자인 시스템 컴포넌트 개발', labels: [{ text: 'feature', color: 'green' }], authorName: 'LeeJaeWan', timestamp: '22분 전', milestoneTitle: 'v1.0 릴리즈' },
-    { id: 3, status: 'closed', title: 'README 파일 수정', labels: [], authorName: 'Wonjae-Song0906', timestamp: '1시간 전', milestoneTitle: null },
-];
+import type { IssueResponse } from "../types/Issue";
 
 export default function IssueListPage() {
-    // 선택된 이슈 ID들을 관리하는 상태
+    const [issues, setIssues] = useState<IssueType[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+    useEffect(() => {
+        const fetchIssues = async () => {
+            try {
+                // TODO: 하드코딩 된 api 요청 추후에 변경 요망
+                const response = await fetch("http://localhost:8080/api/issues");
+                const result: IssueResponse = await response.json();
+
+                if(result.success){
+                    const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => {
+                        return {
+                            id: apiIssue.id,
+                            status: apiIssue.opened ? 'open' : 'closed',
+                            title: apiIssue.title,
+                            labels: apiIssue.labels.map(label => ({
+                                text: label.name,
+                                color: label.backgroundColor
+                            })),
+                            authorName: apiIssue.author.name,
+                            timestamp: apiIssue.createdAt,
+                            milestoneTitle: apiIssue.milestone ? apiIssue.milestone.name : null
+                        }
+                    });
+
+                    setIssues(mappedIssues);
+                }
+            } catch (error) {
+                console.error("이슈 목록을 불러오는데 실패했습니다.", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        void fetchIssues();
+    }, []);
 
     // 개별 아이템 선택 토글 함수
     const handleToggleItem = (id: number) => {
@@ -26,16 +55,20 @@ export default function IssueListPage() {
         );
     };
 
-    const isAllSelected = mockIssues.length > 0 && selectedIds.length === mockIssues.length;
+    const isAllSelected = issues.length > 0 && selectedIds.length === issues.length;
     const hasSelection = selectedIds.length > 0;
 
     // 전체 선택/해제 토글 함수
     const handleToggleAll = () => {
-        if(selectedIds.length === mockIssues.length) {
+        if(selectedIds.length === issues.length) {
             setSelectedIds([]); // 모두 선택된 상태면 전체 해제
         } else {
-            setSelectedIds(mockIssues.map(issue => issue.id)); // 아니면 전체 선택
+            setSelectedIds(issues.map(issue => issue.id)); // 아니면 전체 선택
         }
+    }
+
+    if(isLoading) {
+        return <main className="max-w-[1440px] mx-auto px-6 py-10 text-center">데이터를 불러오는 중입니다...</main>;
     }
 
     return (
@@ -68,7 +101,7 @@ export default function IssueListPage() {
                 )}
 
                 <div className="flex flex-col">
-                    {mockIssues.map((issue) => (
+                    {issues.map((issue) => (
                         <IssueItem 
                             key={issue.id} 
                             issue={issue} 
