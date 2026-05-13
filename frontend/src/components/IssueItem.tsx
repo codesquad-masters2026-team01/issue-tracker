@@ -100,5 +100,3 @@ export default function IssueItem({ issue, isSelected, onToggle }: IssueItemProp
         </div>
     );
 }
-
-export interface IssueItemProps {}
