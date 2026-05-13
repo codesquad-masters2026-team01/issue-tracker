@@ -12,7 +12,7 @@
 ## 협업 전략
 ### main: 배포 가능한 안정된 브랜치.
 ### team01: upstream 으로 PR 보내는 브랜치
-### feat-기능명: 각 파트별 기능 개발 브랜치
+### feat-도메인-기능: 특정 도메인의 기능 개발 브랜치
 
 ---
 
@@ -27,7 +27,7 @@
 ### ● Feat: 새로운 기능 추가
 ### ● Fix: 버그 수정
 ### ● Refactor: 코드 리팩토링
-### ● Docs: 문서 수정(READEME 등)
+### ● Docs: 문서 수정(README 등)
 
 ---
 
@@ -70,7 +70,12 @@
 ### [➡️회의록](https://github.com/codesquad-masters2026-team01/issue-tracker/wiki/Meeting%E2%80%90Notes#20260504)
 
 ---
+
+## API 명세서
+### [Notion](https://www.notion.so/Issue-Tracker-API-3565ff02789e80b285b5dd715e59ad24?source=copy_link)
+
+---
+
 ## 🏗️ ERD (Entity Relationship Diagram
-
+### **_자료형은 추후에 지정할 예정_**
 ![Project ERD](./images/ERD.png)
-
