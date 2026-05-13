@@ -1,4 +1,4 @@
-# Project Issue Tracker
+# Project IssueMainPage Tracker
 
 ## 팀원 소개
 ### ● Wanja
