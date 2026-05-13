@@ -1,15 +1,20 @@
 spring:
+  profiles:
+    active: local
+    # 지금은 local 이라는 특수 모드를 킨다 -> application-local.yml 을 찾음
+    # 나중에 읽을 설정이 우선권을 가진다.
+
   datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: root # 도커 설정과 동일하게!
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
     init:
-      mode: always # 애플리케이션 실행 시마다 schema.sql을 실행하게 설정
+      mode: never # 기본값은 절대 초기화하지 않음(never)으로 설정 -> 실제 서버에서 데이터가 날아가는 것을 방지
 
 logging:
   level:
-    org.springframework.jdbc.datasource.init: DEBUG # schema.sql 실행 과정을 보여줍니다
-    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.datasource.init: INFO
+    org.springframework.jdbc.core.JdbcTemplate: INFO
