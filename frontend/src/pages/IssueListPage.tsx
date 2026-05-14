@@ -1,6 +1,7 @@
 // src/pages/IssueListPage.tsx
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import FilterBar from "../components/FilterBar.tsx";
 import LabelMilestoneTabs from "../components/LabelMilestoneTabs.tsx";
 import IssueListHeader from "../components/IssueListHeader.tsx";
@@ -13,10 +14,17 @@ export default function IssueListPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+    // 1. 열린/닫힌 이슈 및 레이블, 마일스톤 개수를 관리할 상태 추가
+    const [counts, setCounts] = useState({
+        open: 0,
+        closed: 0,
+        label: 0,
+        milestone: 0
+    });
+
     useEffect(() => {
         const fetchIssues = async () => {
             try {
-                // TODO: 하드코딩 된 api 요청 추후에 변경 요망
                 const response = await fetch("http://localhost:8080/api/issues");
                 const result: IssueResponse = await response.json();
 
@@ -37,6 +45,14 @@ export default function IssueListPage() {
                     });
 
                     setIssues(mappedIssues);
+
+                    // 2. 백엔드에서 받은 실제 메타데이터(모든 개수 정보)를 상태에 저장
+                    setCounts({
+                        open: result.data.metadata.openIssueCount,
+                        closed: result.data.metadata.closedIssueCount,
+                        label: result.data.metadata.labelCount,         // 추가됨
+                        milestone: result.data.metadata.milestoneCount  // 추가됨
+                    });
                 }
             } catch (error) {
                 console.error("이슈 목록을 불러오는데 실패했습니다.", error);
@@ -48,7 +64,6 @@ export default function IssueListPage() {
         void fetchIssues();
     }, []);
 
-    // 개별 아이템 선택 토글 함수
     const handleToggleItem = (id: number) => {
         setSelectedIds(prev =>
             prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]
@@ -58,12 +73,11 @@ export default function IssueListPage() {
     const isAllSelected = issues.length > 0 && selectedIds.length === issues.length;
     const hasSelection = selectedIds.length > 0;
 
-    // 전체 선택/해제 토글 함수
     const handleToggleAll = () => {
         if(selectedIds.length === issues.length) {
-            setSelectedIds([]); // 모두 선택된 상태면 전체 해제
+            setSelectedIds([]);
         } else {
-            setSelectedIds(issues.map(issue => issue.id)); // 아니면 전체 선택
+            setSelectedIds(issues.map(issue => issue.id));
         }
     }
 
@@ -73,41 +87,47 @@ export default function IssueListPage() {
 
     return (
         <main className="max-w-[1440px] mx-auto px-6 py-10">
-            {/* 상단 필터/버튼 영역 */}
             <div className="flex justify-between items-center mb-6">
                 <FilterBar />
                 <div className="flex items-center gap-6">
-                    <LabelMilestoneTabs />
-                    <button className="flex items-center justify-center px-6 h-10 bg-[#007AFF] text-white rounded-xl text-sm font-bold">
+                    {/* 3. 탭 컴포넌트에 상태로 관리되는 레이블 및 마일스톤 개수 전달 */}
+                    <LabelMilestoneTabs
+                        labelCount={counts.label}
+                        milestoneCount={counts.milestone}
+                    />
+                    <Link
+                        to="/issues/new"
+                        className="flex items-center justify-center px-6 h-10 bg-[#007AFF] text-white rounded-xl text-sm font-bold"
+                    >
                         + 이슈 작성
-                    </button>
+                    </Link>
                 </div>
             </div>
 
-            {/* 이슈 목록 영역 */}
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                {/* 4. 조건부 헤더 렌더링: 하나라도 선택되면 SelectionHeader, 아니면 기본 Header */}
                 {hasSelection ? (
                     <IssueSelectionHeader
                         selectedCount={selectedIds.length}
                         isAllSelected={isAllSelected}
                         onToggleAll={handleToggleAll}
-                        />
+                    />
                 ):(
                     <IssueListHeader
                         isAllSelected={isAllSelected}
                         onToggleAll={handleToggleAll}
-                        />
+                        openCount={counts.open}
+                        closedCount={counts.closed}
+                    />
                 )}
 
                 <div className="flex flex-col">
                     {issues.map((issue) => (
-                        <IssueItem 
-                            key={issue.id} 
-                            issue={issue} 
-                            isSelected={selectedIds.includes(issue.id)} // 선택 여부 주입
-                            onToggle={() => handleToggleItem(issue.id)} // 토글 함수 주입
-                        /> 
+                        <IssueItem
+                            key={issue.id}
+                            issue={issue}
+                            isSelected={selectedIds.includes(issue.id)}
+                            onToggle={() => handleToggleItem(issue.id)}
+                        />
                     ))}
                 </div>
             </div>
