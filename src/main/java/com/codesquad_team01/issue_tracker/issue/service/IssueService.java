@@ -3,9 +3,12 @@ package com.codesquad_team01.issue_tracker.issue.service;
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.dto.response.*;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
-import com.codesquad_team01.issue_tracker.issue.repository.LabelRepository;
-import com.codesquad_team01.issue_tracker.issue.repository.MemberRepository;
-import com.codesquad_team01.issue_tracker.issue.repository.MilestoneRepository;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelResponse;
+import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
+import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
+import com.codesquad_team01.issue_tracker.member.repository.MemberRepository;
+import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneResponse;
+import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

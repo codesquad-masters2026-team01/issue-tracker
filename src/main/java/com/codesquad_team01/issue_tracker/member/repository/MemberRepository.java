@@ -1,6 +1,6 @@
-package com.codesquad_team01.issue_tracker.issue.repository;
+package com.codesquad_team01.issue_tracker.member.repository;
 
-import com.codesquad_team01.issue_tracker.issue.domain.Member;
+import com.codesquad_team01.issue_tracker.member.domain.Member;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 

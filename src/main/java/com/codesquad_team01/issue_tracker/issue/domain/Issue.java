@@ -10,23 +10,23 @@ public class Issue {
 
     @Id
     private Long id;
-
     private String title;
     private String contents;
-    private boolean isOpened;
-    private Long authorId;
     private Long milestoneId;
+    private Long authorId;
+    private boolean isOpened;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
 
-    public Issue(String title, String contents, boolean isOpened, Long authorId,
-                 Long milestoneId,  LocalDateTime createdAt, LocalDateTime deletedAt) {
+    public Issue(Long id, String title, String contents, Long milestoneId,
+                 Long authorId, boolean isOpened,  LocalDateTime createdAt, LocalDateTime deletedAt) {
+        this.id = id;
         this.title = title;
         this.contents = contents;
-        this.isOpened = isOpened;
-        this.authorId = authorId;
         this.milestoneId = milestoneId;
+        this.authorId = authorId;
+        this.isOpened = isOpened;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
     }

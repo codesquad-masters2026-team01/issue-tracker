@@ -1,4 +1,4 @@
-package com.codesquad_team01.issue_tracker.issue.dto.response;
+package com.codesquad_team01.issue_tracker.global.dto;
 
 public record ApiResponse<T>(
         boolean success,
