@@ -2,11 +2,11 @@ package com.codesquad_team01.issue_tracker.label.repository;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
 
-public interface LabelRepository extends CrudRepository<Label, Long> {
+public interface LabelRepository extends ListCrudRepository<Label, Long> {
 
 
     @Query("SELECT * FROM label WHERE name = :name " +

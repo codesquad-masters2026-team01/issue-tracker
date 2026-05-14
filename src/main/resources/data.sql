@@ -6,13 +6,15 @@ INSERT INTO member (user_id, name, password, email) VALUES
 -- 2. milestone 데이터
 INSERT INTO milestone (name, description, completion_date, is_opened) VALUES
                                                                           ('마일스톤 1', '첫 번째 목표입니다.', '2026-06-30', true),
-                                                                          ('마일스톤 2', '두 번째 목표입니다.', '2026-12-31', true);
+                                                                          ('마일스톤 2', '두 번째 목표입니다.', '2026-12-31', true),
+                                                                          ('마일스톤 3', '세 번째 목표입니다.', '2026-12-31', true);
 
 -- 3. label 데이터
 INSERT INTO label (name, description, background_color, text_color) VALUES
                                                                         ('bug', '버그 수정용 라벨', '#FF0000', '#FFFFFF'),
                                                                         ('feat', '새로운 기능 추가', '#00FF00', '#000000'),
-                                                                        ('documentation', '문서 작업', '#0000FF', '#FFFFFF');
+                                                                        ('documentation', '문서 작업', '#0000FF', '#FFFFFF'),
+                                                                        ('chore', '환경 설정', '#FF00FF', '#FFFFFF');
 
 -- 4. issue 데이터 (메인 목록의 주인공)
 INSERT INTO issue (title, contents, is_opened, author_id, milestone_id, created_at) VALUES
