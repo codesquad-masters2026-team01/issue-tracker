@@ -38,7 +38,7 @@ public class IssueWriteService {
                 null
         );
         Issue savedIssue = issueRepository.save(issue);
-        Long issueId = savedIssue.getId();
+        Long issueId = savedIssue.id();
 
         for (Long memberId : issueWriteRequest.assigneeIds()) {
             assigneeRepository.save(new Assignee(null, issueId, memberId ));

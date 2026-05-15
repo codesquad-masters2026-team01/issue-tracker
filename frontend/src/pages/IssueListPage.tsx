@@ -1,5 +1,4 @@
 // src/pages/IssueListPage.tsx
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import FilterBar from "../components/FilterBar.tsx";
@@ -14,7 +13,9 @@ export default function IssueListPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-    // 1. 열린/닫힌 이슈 및 레이블, 마일스톤 개수를 관리할 상태 추가
+    // 현재 탭 상태 관리 (open 또는 closed)
+    const [status, setStatus] = useState<'open' | 'closed'>('open');
+
     const [counts, setCounts] = useState({
         open: 0,
         closed: 0,
@@ -25,33 +26,32 @@ export default function IssueListPage() {
     useEffect(() => {
         const fetchIssues = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/issues");
+                setIsLoading(true);
+                const response = await fetch(`http://localhost:8080/api/issues?status=${status}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
-                    const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => {
-                        return {
-                            id: apiIssue.id,
-                            status: apiIssue.opened ? 'open' : 'closed',
-                            title: apiIssue.title,
-                            labels: apiIssue.labels.map(label => ({
-                                text: label.name,
-                                color: label.backgroundColor
-                            })),
-                            authorName: apiIssue.author.name,
-                            timestamp: apiIssue.createdAt,
-                            milestoneTitle: apiIssue.milestone ? apiIssue.milestone.name : null
-                        }
-                    });
+                    const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => ({
+                        id: apiIssue.id,
+                        status: apiIssue.opened ? 'open' : 'closed',
+                        title: apiIssue.title,
+                        labels: apiIssue.labels.map(label => ({
+                            text: label.name,
+                            color: label.backgroundColor
+                        })),
+                        authorName: apiIssue.author.name,
+                        timestamp: apiIssue.createdAt,
+                        milestoneTitle: apiIssue.milestone ? apiIssue.milestone.name : null
+                    }));
 
                     setIssues(mappedIssues);
+                    setSelectedIds([]);
 
-                    // 2. 백엔드에서 받은 실제 메타데이터(모든 개수 정보)를 상태에 저장
                     setCounts({
                         open: result.data.metadata.openIssueCount,
                         closed: result.data.metadata.closedIssueCount,
-                        label: result.data.metadata.labelCount,         // 추가됨
-                        milestone: result.data.metadata.milestoneCount  // 추가됨
+                        label: result.data.metadata.labelCount,
+                        milestone: result.data.metadata.milestoneCount
                     });
                 }
             } catch (error) {
@@ -62,7 +62,7 @@ export default function IssueListPage() {
         };
 
         void fetchIssues();
-    }, []);
+    }, [status]);
 
     const handleToggleItem = (id: number) => {
         setSelectedIds(prev =>
@@ -81,16 +81,11 @@ export default function IssueListPage() {
         }
     }
 
-    if(isLoading) {
-        return <main className="max-w-[1440px] mx-auto px-6 py-10 text-center">데이터를 불러오는 중입니다...</main>;
-    }
-
     return (
         <main className="max-w-[1440px] mx-auto px-6 py-10">
             <div className="flex justify-between items-center mb-6">
                 <FilterBar />
                 <div className="flex items-center gap-6">
-                    {/* 3. 탭 컴포넌트에 상태로 관리되는 레이블 및 마일스톤 개수 전달 */}
                     <LabelMilestoneTabs
                         labelCount={counts.label}
                         milestoneCount={counts.milestone}
@@ -117,18 +112,29 @@ export default function IssueListPage() {
                         onToggleAll={handleToggleAll}
                         openCount={counts.open}
                         closedCount={counts.closed}
+                        currentStatus={status}
+                        onStatusChange={setStatus}
                     />
                 )}
-
-                <div className="flex flex-col">
-                    {issues.map((issue) => (
-                        <IssueItem
-                            key={issue.id}
-                            issue={issue}
-                            isSelected={selectedIds.includes(issue.id)}
-                            onToggle={() => handleToggleItem(issue.id)}
-                        />
-                    ))}
+                <div className="flex flex-col relative">
+                    {isLoading ? (
+                        <div className="py-20 text-center text-slate-400 font-['Pretendard']">
+                            이슈를 불러오는 중입니다...
+                        </div>
+                    ) : issues.length > 0 ? (
+                        issues.map((issue) => (
+                            <IssueItem
+                                key={issue.id}
+                                issue={issue}
+                                isSelected={selectedIds.includes(issue.id)}
+                                onToggle={() => handleToggleItem(issue.id)}
+                            />
+                        ))
+                    ) : (
+                        <div className="py-20 text-center text-slate-400 font-['Pretendard']">
+                            등록된 이슈가 없습니다.
+                        </div>
+                    )}
                 </div>
             </div>
         </main>

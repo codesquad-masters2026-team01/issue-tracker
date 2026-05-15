@@ -57,40 +57,29 @@ export default function IssueWritePage() {
         setSelectedLabelIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
     };
 
-    // src/pages/IssueWritePage.tsx 내부의 handleSubmit 수정
-
     const handleSubmit = async () => {
         try {
-            // 1. 서버로 보낼 데이터 객체 생성 (백엔드 DTO 규격에 맞춤)
             const issueData = {
                 title: title.trim(),
                 contents: contents.trim(),
-                authorId: 1, // TODO: 로그인 기능 구현 후 실제 사용자 ID로 변경
+                authorId: 1,
                 assigneeIds: selectedMemberIds,
                 labelsIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
             };
 
-            // 2. multipart/form-data 전송을 위한 FormData 객체 생성
             const formData = new FormData();
-
-            // JSON 데이터를 Blob으로 만들어 'request'라는 이름으로 추가
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            // (선택 사항) 파일 첨부 기능이 있다면 여기서 추가
-            // files.forEach(file => formData.append('files', file));
-
-            // 3. 서버에 POST 요청 전송
             const response = await fetch("http://localhost:8080/api/issues", {
                 method: "POST",
-                body: formData, // FormData를 보낼 때는 Content-Type 헤더를 직접 설정하지 않습니다
+                body: formData,
             });
 
             const result = await response.json();
 
             if (response.ok && result.success) {
-                // 저장 성공 시 메인 목록 페이지로 이동
                 navigate("/");
             } else {
                 alert("이슈 저장에 실패했습니다: " + result.message);
@@ -153,11 +142,11 @@ export default function IssueWritePage() {
                     </div>
                 </div>
 
-                {/* 오른쪽: 사이드바 영역 */}
-                <div className="w-80 flex flex-col gap-4">
+                {/* 💡 [사이드바 수정] 팝업이 짤리지 않도록 overflow-hidden을 제거했습니다. */}
+                <div className="w-80 flex flex-col h-fit bg-white border border-slate-200 rounded-xl shadow-sm">
 
-                    {/* [A] 담당자 섹션 (레이블처럼 자동 정렬 적용) */}
-                    <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+                    {/* [A] 담당자 섹션 */}
+                    <div className="p-6 border-b border-slate-200">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-sm font-bold text-slate-500">담당자</h3>
                             <ListFilterDropdown title={""}>
@@ -176,7 +165,6 @@ export default function IssueWritePage() {
                                 </div>
                             </ListFilterDropdown>
                         </div>
-                        {/* 레이블 정렬 방식과 동일하게 allMembers를 기준으로 필터링하여 출력 */}
                         <div className="flex flex-col gap-2">
                             {selectedMemberIds.length === 0 ? <span className="text-sm text-slate-400">선택된 담당자 없음</span> :
                                 allMembers.filter(m => selectedMemberIds.includes(m.id)).map(member => (
@@ -188,7 +176,7 @@ export default function IssueWritePage() {
                     </div>
 
                     {/* [B] 레이블 섹션 */}
-                    <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+                    <div className="p-6 border-b border-slate-200">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-sm font-bold text-slate-500">레이블</h3>
                             <ListFilterDropdown title={""}>
@@ -219,7 +207,7 @@ export default function IssueWritePage() {
                     </div>
 
                     {/* [C] 마일스톤 섹션 */}
-                    <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+                    <div className="p-6">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-sm font-bold text-slate-500">마일스톤</h3>
                             <ListFilterDropdown title={""}>

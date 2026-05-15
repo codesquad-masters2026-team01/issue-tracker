@@ -2,19 +2,22 @@
 import ListFilterDropdown from "./ListFilterDropdown.tsx";
 import AssigneeFilterContent from "./filter/AssigneeFilterContent.tsx";
 
-// 1. 프롭 타입에 openCount와 closedCount를 추가 정의
 interface IssueListHeaderProps {
     isAllSelected: boolean;
     onToggleAll: () => void;
     openCount: number;
     closedCount: number;
+    currentStatus: 'open' | 'closed'; // [추가]
+    onStatusChange: (status: 'open' | 'closed') => void; // [추가]
 }
 
 export default function IssueListHeader({
                                             isAllSelected,
                                             onToggleAll,
                                             openCount,
-                                            closedCount
+                                            closedCount,
+                                            currentStatus,
+                                            onStatusChange
                                         }: IssueListHeaderProps) {
 
     return (
@@ -28,27 +31,31 @@ export default function IssueListHeader({
             />
 
             <div className="flex items-center gap-6 ml-8">
-                {/* [A] 열린 이슈 */}
-                <button className="flex items-center gap-1 cursor-pointer">
-                    <svg className="w-4 h-4 text-[#14142B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {/* [A] 열린 이슈 버튼 */}
+                <button
+                    className="flex items-center gap-1 cursor-pointer"
+                    onClick={() => onStatusChange('open')}
+                >
+                    <svg className={`w-4 h-4 ${currentStatus === 'open' ? 'text-[#14142B]' : 'text-[#4E4B66]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10" strokeWidth="2"></circle>
                         <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round"></path>
                     </svg>
-                    <span className="font-['Pretendard'] text-[16px] font-bold text-[#14142B]">
-                    {/* 2. 하드코딩된 숫자 대신 전달받은 데이터 출력 */}
+                    <span className={`font-['Pretendard'] text-[16px] ${currentStatus === 'open' ? 'font-bold text-[#14142B]' : 'font-medium text-[#4E4B66]'}`}>
                         열린 이슈({openCount})
-                </span>
+                    </span>
                 </button>
 
-                {/* [B] 닫힌 이슈 */}
-                <button className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-                    <svg className="w-4 h-4 text-[#4E4B66]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {/* [B] 닫힌 이슈 버튼 */}
+                <button
+                    className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => onStatusChange('closed')}
+                >
+                    <svg className={`w-4 h-4 ${currentStatus === 'closed' ? 'text-[#14142B]' : 'text-[#4E4B66]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                     </svg>
-                    <span className="font-['Pretendard'] text-[16px] font-medium text-[#4E4B66]">
-                    {/* 3. 하드코딩된 숫자 대신 전달받은 데이터 출력 */}
+                    <span className={`font-['Pretendard'] text-[16px] ${currentStatus === 'closed' ? 'font-bold text-[#14142B]' : 'font-medium text-[#4E4B66]'}`}>
                         닫힌 이슈({closedCount})
-                </span>
+                    </span>
                 </button>
             </div>
 

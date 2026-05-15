@@ -28,10 +28,14 @@ public class IssueController {
     @GetMapping("/api/issues")
     public ApiResponse<IssueListResponse> getIssueList(@RequestParam(defaultValue = "open") String status) {
         boolean isOpened = status.equals("open");
+        String message = isOpened ? "열린 이슈 페이지 로딩 성공" : "닫힌 이슈 페이지 로딩 성공";
 
         IssueListResponse data = issueService.getIssueList(isOpened);
-        return ApiResponse.success("이슈 페이지 로딩 성공", data);
+
+        return ApiResponse.success(message, data);
     }
+
+
 
     @PostMapping(value = "/api/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Map<String, Long>> uploadIssue(
