@@ -21,7 +21,7 @@ export default function IssueListHeader({
         <div className="flex items-center w-full h-[64px] bg-[#F7F7FC] rounded-t-[16px] px-8 border-b border-slate-200 gap-6">
             <input
                 type="checkbox"
-                id="headerSelecAllCheckbox"
+                id="headerSelectAllCheckbox"
                 checked={isAllSelected}
                 onChange={onToggleAll}
                 className="w-4 h-4 rounded-[2px] border-[1.6px] border-[#D9DBE9] text-blue-600 focus:ring-0 cursor-pointer"

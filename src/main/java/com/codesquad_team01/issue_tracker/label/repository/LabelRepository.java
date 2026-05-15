@@ -13,10 +13,12 @@ public interface LabelRepository extends ListCrudRepository<Label, Long> {
             "AND deleted_at IS NULL")
     List<Label> findByName(String name);
 
-    @Query("SELECT l.* FROM label l " +
+    record LabelWithIssueId(Long issueId, Long id, String name, String backgroundColor, String textColor) {}
+
+    @Query("SELECT il.issue_id, l.* FROM label l " +
             "JOIN issue_label il ON l.id = il.label_id " +
-            "WHERE il.issue_id = :issueId AND l.deleted_at IS NULL")
-    List<Label> findAllByIssueId(Long issueId);
+            "WHERE il.issue_id IN (:issueIds) AND l.deleted_at IS NULL")
+    List<LabelWithIssueId> findAllByIssueIdIn(List<Long> issueIds);
 
     long countByDeletedAtIsNull();
 }

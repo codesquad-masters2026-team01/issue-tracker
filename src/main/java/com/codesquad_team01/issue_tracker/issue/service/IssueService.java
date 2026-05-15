@@ -5,13 +5,16 @@ import com.codesquad_team01.issue_tracker.issue.dto.response.*;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelResponse;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
+import com.codesquad_team01.issue_tracker.member.domain.Member;
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
 import com.codesquad_team01.issue_tracker.member.repository.MemberRepository;
+import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneResponse;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class IssueService {
@@ -29,55 +32,62 @@ public class IssueService {
         this.milestoneRepository = milestoneRepository;
     }
 
-
     public IssueListResponse getIssueList(boolean isOpened) {
-        List<Issue> issueList =  issueRepository.findAllByIsOpened(isOpened);
 
-        List<IssueResponse> issues = issueList.stream()
-                .map(this::convertToIssueResponse)
-                .toList();
+        List<Issue> issueList = issueRepository.findAllByIsOpened(isOpened);
 
-        long  openedIssueCount = issueRepository.countByIsOpenedAndDeletedAtIsNull(true);
-        long closedIssueCount = issueRepository.countByIsOpenedAndDeletedAtIsNull(false);
-        long labelCount = labelRepository.countByDeletedAtIsNull();
-        long milestoneCount = milestoneRepository.countByDeletedAtIsNull();
-
-        IssueListResponse.Metadata metadata = new IssueListResponse.Metadata(
-                openedIssueCount,
-                closedIssueCount,
-                labelCount,
-                milestoneCount
-        );
-
-        return new IssueListResponse(metadata, issues);
-    }
-
-    private IssueResponse convertToIssueResponse(Issue issue) {
-
-        AuthorResponse author = memberRepository.findById(issue.getAuthorId())
-                .map(member -> new AuthorResponse(member.getId(), member.getName()))
-                .orElse(new AuthorResponse(null, "알 수 없는 사용자"));
-
-        List<LabelResponse> label = labelRepository.findAllByIssueId(issue.getId())
-                .stream().map(l -> new LabelResponse(l.getId(), l.getName(),
-                        l.getBackgroundColor(), l.getTextColor()))
-                .toList();
-
-        MilestoneResponse milestone = null;
-        if (issue.getMilestoneId() != null) {
-            milestone = milestoneRepository.findById(issue.getMilestoneId())
-                    .map(m -> new MilestoneResponse(m.getId(), m.getName()))
-                    .orElse(null);
+        if (issueList.isEmpty()) {
+            return new IssueListResponse(createMetadata(), Collections.emptyList());
         }
 
+        List<Long> authorIds = issueList.stream().map(Issue::authorId).distinct().toList();
+        List<Long> milestoneIds = issueList.stream().map(Issue::milestoneId).filter(Objects::nonNull).distinct().toList();
+        List<Long> issueIds = issueList.stream().map(Issue::id).toList();
+
+        Map<Long, AuthorResponse> authorMap = memberRepository.findAllById(authorIds).stream()
+                .collect(Collectors.toMap(Member::getId, m -> new AuthorResponse(m.getId(), m.getName())));
+
+        Map<Long, MilestoneResponse> milestoneMap = milestoneRepository.findAllById(milestoneIds).stream()
+                .collect(Collectors.toMap(Milestone::getId, m -> new MilestoneResponse(m.getId(), m.getName())));
+
+        Map<Long, List<LabelResponse>> labelsMap = labelRepository.findAllByIssueIdIn(issueIds).stream()
+                .collect(Collectors.groupingBy(
+                        LabelRepository.LabelWithIssueId::issueId,
+                        Collectors.mapping(l -> new LabelResponse(l.id(), l.name(), l.backgroundColor(), l.textColor()), Collectors.toList())
+                ));
+        List<IssueResponse> issues = issueList.stream()
+                .map(issue -> {
+                    AuthorResponse author = authorMap.getOrDefault(issue.authorId(),
+                            new AuthorResponse(null, "알 수 없는 사용자"));
+                    MilestoneResponse milestone = (issue.milestoneId() != null) ?
+                            milestoneMap.get(issue.milestoneId()) : null;
+                    List<LabelResponse> labels = labelsMap.getOrDefault(issue.id(), Collections.emptyList());
+                    return convertToIssueResponse(issue, author, labels, milestone);
+                })
+                .toList();
+
+        return new IssueListResponse(createMetadata(), issues);
+    }
+
+    private IssueListResponse.Metadata createMetadata() {
+        return new IssueListResponse.Metadata(
+                issueRepository.countByIsOpenedAndDeletedAtIsNull(true),
+                issueRepository.countByIsOpenedAndDeletedAtIsNull(false),
+                labelRepository.countByDeletedAtIsNull(),
+                milestoneRepository.countByDeletedAtIsNull()
+        );
+    }
+
+    private IssueResponse convertToIssueResponse(Issue issue, AuthorResponse author,
+                                                 List<LabelResponse> labels, MilestoneResponse milestone) {
         return new IssueResponse(
-                issue.getId(),
-                issue.getTitle(),
+                issue.id(),
+                issue.title(),
                 author,
-                label,
+                labels,
                 milestone,
                 issue.isOpened(),
-                issue.getCreatedAt()
+                issue.createdAt()
         );
     }
 }
