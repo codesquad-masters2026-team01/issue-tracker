@@ -1,5 +1,7 @@
 package com.codesquad_team01.issue_tracker.label;
 
+import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
+import com.codesquad_team01.issue_tracker.label.dto.LabelPageResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +15,9 @@ public class LabelController {
     }
 
     @GetMapping("/api/labels")
-    public LabelPageResponse getLabelList(){
+    public ApiResponse<LabelPageResponse> getLabelList(){
+        LabelPageResponse responseData = labelService.getLabelPageResponse();
 
-        return new LabelPageResponse();
+        return ApiResponse.ok("라벨 페이지 로딩 성공", responseData);
     }
 }
