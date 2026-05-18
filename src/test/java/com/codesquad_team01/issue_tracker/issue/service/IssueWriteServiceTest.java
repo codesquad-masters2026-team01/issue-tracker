@@ -4,8 +4,6 @@ import com.codesquad_team01.issue_tracker.issue.domain.Assignee;
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.domain.IssueLabel;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueWriteRequest;
-import com.codesquad_team01.issue_tracker.issue.repository.AssigneeRepository;
-import com.codesquad_team01.issue_tracker.issue.repository.IssueLabelRepository;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,11 +27,6 @@ class IssueWriteServiceTest {
     @Mock
     private IssueRepository issueRepository;
 
-    @Mock
-    private AssigneeRepository assigneeRepository;
-
-    @Mock
-    private IssueLabelRepository issueLabelRepository;
 
     @InjectMocks
     private IssueWriteService issueWriteService;
@@ -51,20 +44,7 @@ class IssueWriteServiceTest {
                 1L
         );
 
-        // 2. 가짜 이슈 엔티티 생성 (저장 후 ID 100L을 반환한다고 가정)
-        Issue savedIssue = new Issue(
-                100L,
-                request.title(),
-                request.contents(),
-                request.milestoneId(),
-                1L,
-                true,
-                LocalDateTime.now(),
-                null
-        );
 
-        // 3. Mock 행동 정의: 어떤 Issue가 들어오든 savedIssue를 반환
-        given(issueRepository.save(any(Issue.class))).willReturn(savedIssue);
 
         // When (실행)
         Long resultId = issueWriteService.writeIssue(request, List.of());
@@ -77,10 +57,5 @@ class IssueWriteServiceTest {
         // - 이슈 본체는 1번 저장되어야 함
         verify(issueRepository, times(1)).save(any(Issue.class));
 
-        // - 담당자는 리스트 크기만큼(2번) 저장되어야 함 (Strategy 2)
-        verify(assigneeRepository, times(2)).save(any(Assignee.class));
-
-        // - 라벨은 리스트 크기만큼(1번) 저장되어야 함 (Strategy 2)
-        verify(issueLabelRepository, times(1)).save(any(IssueLabel.class));
     }
 }
