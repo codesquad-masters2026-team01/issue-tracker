@@ -1,15 +1,18 @@
+// Assignee.java 수정본
 package com.codesquad_team01.issue_tracker.issue.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Assignee {
     @Id
-    private final Long id;
-    private final Long memberId;
+    private Long id;
+    private Long memberId;
 
-    // Spring Data JDBC 및 객체 생성을 위한 전체 생성자
     public Assignee(Long id, Long memberId) {
         this.id = id;
         this.memberId = memberId;
