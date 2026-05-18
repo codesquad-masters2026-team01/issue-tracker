@@ -1,11 +1,17 @@
 package com.codesquad_team01.issue_tracker.label;
 
+import com.codesquad_team01.issue_tracker.label.dto.LabelMetaData;
+import com.codesquad_team01.issue_tracker.label.dto.LabelPageResponse;
+import com.codesquad_team01.issue_tracker.label.dto.LabelTempResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,7 +36,14 @@ public class LabelControllerTest {
     @Test
     @DisplayName("GET /api/labels 요청이 온 뒤 정상적으로 라벨 목록과 마일스톤의 개수를 조회하면 200 OK와 통합 데이터를 반환한다.")
     public void getLabels_Success() throws Exception {
-        LabelPageResponse mockResponse = new LabelPageResponse();
+        LabelMetaData labelMetaData = new LabelMetaData(3, 1);
+        LabelTempResponse label1
+                = new LabelTempResponse(1L, "라벨1", "라벨1의 설명", "#000000", "#FCFBFB");
+        LabelTempResponse label2
+                = new LabelTempResponse(2L, "라벨2", "라벨2의 설명", "#000000", "#FCFBFB");
+        List<LabelTempResponse> labels = Arrays.asList(label1, label2);
+
+        LabelPageResponse mockResponse = new LabelPageResponse(labelMetaData, labels);
 
         given(labelService.getLabelPageResponse()).willReturn(mockResponse);
 
