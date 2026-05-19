@@ -1,4 +1,4 @@
-package com.codesquad_team01.issue_tracker.issue.dto.response;
+package com.codesquad_team01.issue_tracker.label.dto.response;
 
 public class LabelResponse {
 

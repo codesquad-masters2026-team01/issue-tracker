@@ -1,8 +1,7 @@
-package com.codesquad_team01.issue_tracker.issue.domain;
+package com.codesquad_team01.issue_tracker.member.domain;
 
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
--- 외래 키 제크 잠시 해제 (테이블 삭제 순서 상관없이 깔끔하게 지우기 위함)
+-- 외래 키 체크 잠시 해제 (테이블 삭제 순서 상관없이 깔끔하게 지우기 위함)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `issue_label`;
 DROP TABLE IF EXISTS `assignee`;
@@ -48,7 +48,7 @@ CREATE TABLE `issue` (
                           `milestone_id` bigint,
                           `author_id` bigint NOT NULL,
                           `is_opened` boolean DEFAULT true,
-                          `created_at` datetime DEFAULT (now()),
+                          `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
                           `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE `comment` (
                             `issue_id` bigint NOT NULL,
                             `author_id` bigint NOT NULL,
                             `contents` text NOT NULL,
-                            `created_at` datetime DEFAULT (now()),
+                            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
                             `deleted_at` datetime DEFAULT NULL -- 삭제 관리 위해 추가
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE `attachment` (
                                `file_url` varchar(512) NOT NULL,
                                `file_size` bigint,
                                `content_type` varchar(50),
-                               `created_at` datetime DEFAULT (now())
+                               `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 7. 이슈 담당자 (연결 테이블 - 전략 2 적용)

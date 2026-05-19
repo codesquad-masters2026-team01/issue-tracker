@@ -1,12 +1,10 @@
-package com.codesquad_team01.issue_tracker.issue.domain;
+package com.codesquad_team01.issue_tracker.milestone.domain;
 
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Getter

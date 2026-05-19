@@ -17,6 +17,28 @@ interface IssueItemProps {
     onToggle: () => void; // 추가: 클릭 핸들러
 }
 
+// 날짜를 상대적 시간(몇 분 전 등)으로 변환하는 헬퍼 함수
+function getRelativeTime(timestamp: string) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInMs = now.getTime() - past.getTime();
+
+    const seconds = Math.floor(diffInMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) return "방금 전";
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 365) return `${days}일 전`;
+
+
+
+    // 7일 이상은 원래 날짜를 보여줌
+    return timestamp.split(' ')[0];
+}
+
 // 오직 '이슈 한 줄'을 그리는 역할만 담당하는 독립적인 모듈입니다.
 export default function IssueItem({ issue, isSelected, onToggle }: IssueItemProps) {
     const { id, status, title, labels, authorName, timestamp, milestoneTitle } = issue;
@@ -71,8 +93,8 @@ export default function IssueItem({ issue, isSelected, onToggle }: IssueItemProp
                     {/* [이슈번호] */}
                     <span>#{id}</span>
 
-                    {/* [작성자 및 타임스탬프 정보] */}
-                    <span>이 이슈는 {timestamp}에 {authorName}님에 의해 작성되었습니다.</span>
+                    {/* [작성자 및 타임스탬프 정보] 수정됨 */}
+                    <span>이 이슈는 {getRelativeTime(timestamp)}, {authorName}님에 의해 작성되었습니다.</span>
 
                     {/* [마일스톤]: 데이터가 있을 때만 렌더링 */}
                     {milestoneTitle && (
