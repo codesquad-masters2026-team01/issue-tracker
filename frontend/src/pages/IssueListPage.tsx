@@ -33,7 +33,7 @@ export default function IssueListPage() {
                 if(result.success){
                     const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => ({
                         id: apiIssue.id,
-                        status: apiIssue.opened ? 'open' : 'closed',
+                        status: apiIssue.isOpened ? 'open' : 'closed',
                         title: apiIssue.title,
                         labels: apiIssue.labels.map(label => ({
                             text: label.name,
