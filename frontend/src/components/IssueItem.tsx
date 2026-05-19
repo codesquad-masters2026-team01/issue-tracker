@@ -31,7 +31,9 @@ function getRelativeTime(timestamp: string) {
     if (seconds < 60) return "방금 전";
     if (minutes < 60) return `${minutes}분 전`;
     if (hours < 24) return `${hours}시간 전`;
-    if (days < 7) return `${days}일 전`;
+    if (days < 365) return `${days}일 전`;
+
+
 
     // 7일 이상은 원래 날짜를 보여줌
     return timestamp.split(' ')[0];
