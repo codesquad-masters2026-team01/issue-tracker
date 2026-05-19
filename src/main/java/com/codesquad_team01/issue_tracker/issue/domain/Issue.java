@@ -49,4 +49,12 @@ public class Issue {
         this(null, title, contents, milestoneId, authorId, true,
                 LocalDateTime.now(), null, assignees, issueLabels);
     }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public void changeStatus(boolean isOpened) {
+        this.isOpened = isOpened;
+    }
 }

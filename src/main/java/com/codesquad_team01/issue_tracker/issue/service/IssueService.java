@@ -10,6 +10,8 @@ import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
 import com.codesquad_team01.issue_tracker.member.repository.MemberRepository;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneResponse;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
+import com.codesquad_team01.issue_tracker.global.exception.ErrorCode;
+import com.codesquad_team01.issue_tracker.global.exception.IssueTrackerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,35 @@ public class IssueService {
     private final LabelRepository labelRepository;
     private final MemberRepository memberRepository;
     private final MilestoneRepository milestoneRepository;
+
+    @Transactional
+    public void deleteIssue(Long issueId) {
+        if (issueId == null || issueId <= 0) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
+
+        issue.delete();
+        issueRepository.save(issue);
+    }
+
+    @Transactional
+    public void patchIssue(Long issueId, String status) {
+        if (issueId == null || issueId <= 0) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
+
+        boolean isOpened = status.equalsIgnoreCase("OPEN");
+        issue.changeStatus(isOpened);
+
+        issueRepository.save(issue);
+    }
+
 
     @Transactional(readOnly = true)
     public IssueListResponse getIssueList(boolean isOpened) {
@@ -85,4 +116,5 @@ public class IssueService {
 
         return new IssueListResponse(metadata, issueResponses);
     }
+
 }

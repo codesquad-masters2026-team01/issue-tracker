@@ -37,3 +37,9 @@ INSERT INTO issue_label (issue_id, label_id) VALUES
                                                  (1, 1), -- 이슈 1에 bug 라벨
                                                  (1, 2), -- 이슈 1에 feat 라벨
                                                  (2, 2); -- 이슈 2에 feat 라벨
+
+-- 7. comment 데이터
+INSERT INTO comment (issue_id, author_id, contents, created_at) VALUES
+                                                                    (1, 2, '이슈 목록 기능의 API 설계는 어떻게 할까요?', '2026-05-11 10:05:00'),
+                                                                    (1, 1, 'REST API로 간단하게 구현하면 될 것 같아요.', '2026-05-11 10:10:00'),
+                                                                    (2, 1, 'GitHub OAuth를 연동할까요?', '2026-05-11 11:05:00');
