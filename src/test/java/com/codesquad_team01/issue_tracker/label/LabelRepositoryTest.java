@@ -1,6 +1,7 @@
 package com.codesquad_team01.issue_tracker.label;
 
-import com.codesquad_team01.issue_tracker.issue.domain.Label;
+import com.codesquad_team01.issue_tracker.label.domain.Label;
+import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LabelRepositoryTest {
 
     @Autowired
-    private LabelTempRepository labelRepository;
+    private LabelRepository labelRepository;
 
     @Test
     @DisplayName("Label 테이블 전체 데이터를 불러온다.")
