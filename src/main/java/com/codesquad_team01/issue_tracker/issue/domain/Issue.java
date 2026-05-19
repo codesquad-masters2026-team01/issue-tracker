@@ -57,4 +57,8 @@ public class Issue {
     public void changeStatus(boolean isOpened) {
         this.isOpened = isOpened;
     }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
 }

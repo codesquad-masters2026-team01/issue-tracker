@@ -1,6 +1,7 @@
 package com.codesquad_team01.issue_tracker.issue.controller;
 
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueStatusRequest;
+import com.codesquad_team01.issue_tracker.issue.dto.request.IssueTitleUpdateRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueWriteRequest;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueDetailResponse;
@@ -70,4 +71,15 @@ public class IssueController {
 
         return ApiResponse.success("이슈 삭제 성공", null);
     }
+
+
+    @PatchMapping("/api/issues/{issueId}/title")
+    public ApiResponse<Void> updateIssueTitle(
+            @PathVariable("issueId") Long issueId,
+            @RequestBody @Valid IssueTitleUpdateRequest request) {
+
+        issueService.titleChange(issueId, request.title());
+        return ApiResponse.success("이슈 제목 수정 성공", null);
+    }
+
 }

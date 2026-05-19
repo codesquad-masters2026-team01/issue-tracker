@@ -55,6 +55,21 @@ public class IssueService {
         issueRepository.save(issue);
     }
 
+    @Transactional
+    public void titleChange(Long issueId, String title) {
+        if (issueId == null || issueId <= 0) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
+
+        issue.changeTitle(title);
+
+        issueRepository.save(issue);
+
+    }
+
 
     @Transactional(readOnly = true)
     public IssueListResponse getIssueList(boolean isOpened) {
