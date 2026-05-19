@@ -22,7 +22,7 @@ public class LabelService {
     public LabelPageResponse getLabelPageResponse(){
 
         // TODO: 안전한 형변환 전략 필요
-        List<Label> labels = (List<Label>) labelRepository.findAll();
+        List<Label> labels = labelRepository.findAll();
         long milestoneCount = milestoneRepository.count();
 
         LabelMetaData labelMetaData = new LabelMetaData(labels.size(), milestoneCount);
