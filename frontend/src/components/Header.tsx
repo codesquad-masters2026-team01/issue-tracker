@@ -1,14 +1,17 @@
 // src/Header.tsx
+import { Link } from "react-router-dom";
 
 export default function Header() {
     return (
         // 1. 전체 컨테이너: 높이 94px, 플렉스 박스로 양끝 정렬, 중앙 배치
         <header className="flex items-center justify-between w-full max-w-[1440px] mx-auto h-[94px] px-6">
 
-            {/* 2. 로고 영역 */}
-            <h1 className="font-['Montserrat'] font-medium text-[32px] text-[#14142B] tracking-[-0.04em] leading-[40px]">
-                Issue Tracker
-            </h1>
+            {/* 2. 로고 영역: Link를 추가하여 메인('/')으로 이동 가능하게 수정 */}
+            <Link to="/">
+                <h1 className="font-['Montserrat'] font-medium text-[32px] text-[#14142B] tracking-[-0.04em] leading-[40px] cursor-pointer hover:opacity-80 transition-opacity">
+                    Issue Tracker
+                </h1>
+            </Link>
 
             {/* 3. 프로필 이미지 영역 */}
             <div className="w-8 h-8 rounded-full bg-slate-300 border border-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all">

@@ -18,6 +18,6 @@ public class LabelController {
     public ApiResponse<LabelPageResponse> getLabelList(){
         LabelPageResponse responseData = labelService.getLabelPageResponse();
 
-        return ApiResponse.ok("레이블 페이지 로딩 성공", responseData);
+        return ApiResponse.success("레이블 페이지 로딩 성공", responseData);
     }
 }

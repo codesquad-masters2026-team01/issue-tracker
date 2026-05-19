@@ -6,19 +6,22 @@ INSERT INTO member (user_id, name, password, email) VALUES
 -- 2. milestone 데이터
 INSERT INTO milestone (name, description, completion_date, is_opened) VALUES
                                                                           ('마일스톤 1', '첫 번째 목표입니다.', '2026-06-30', true),
-                                                                          ('마일스톤 2', '두 번째 목표입니다.', '2026-12-31', true);
+                                                                          ('마일스톤 2', '두 번째 목표입니다.', '2026-12-31', true),
+                                                                          ('마일스톤 3', '세 번째 목표입니다.', '2026-12-31', true);
 
 -- 3. label 데이터
 INSERT INTO label (name, description, background_color, text_color) VALUES
                                                                         ('bug', '버그 수정용 라벨', '#FF0000', '#FFFFFF'),
                                                                         ('feat', '새로운 기능 추가', '#00FF00', '#000000'),
-                                                                        ('documentation', '문서 작업', '#0000FF', '#FFFFFF');
+                                                                        ('documentation', '문서 작업', '#0000FF', '#FFFFFF'),
+                                                                        ('chore', '환경 설정', '#FF00FF', '#FFFFFF');
 
 -- 4. issue 데이터 (메인 목록의 주인공)
 INSERT INTO issue (title, contents, is_opened, author_id, milestone_id, created_at) VALUES
                                                                                        ('이슈 목록 기능을 구현해야 합니다.', '목록 페이지에서 여러 정보를 보여줍니다.', true, 1, 1, '2026-05-11 10:00:00'),
                                                                                        ('로그인 기능을 구현해야 합니다.', 'OAuth 2.0을 사용합니다.', true, 2, 1, '2026-05-11 11:00:00'),
-                                                                                       ('삭제된 테스트 이슈', '이 이슈는 목록에 보이지 않아야 합니다.', true, 1, 2, '2026-05-10 09:00:00');
+                                                                                       ('삭제된 테스트 이슈', '이 이슈는 목록에 보이지 않아야 합니다.', false, 1, 2, '2026-05-10 09:00:00'),
+                                                                                       ('닫힌 테스트 이슈', '이 이슈는 안녕하세요.', false, 1, 2, '2026-05-10 09:00:00');
 
 -- 소프트 딜리트 테스트용 데이터 업데이트
 UPDATE issue SET deleted_at = '2026-05-11 11:10:00' WHERE id = 3;
