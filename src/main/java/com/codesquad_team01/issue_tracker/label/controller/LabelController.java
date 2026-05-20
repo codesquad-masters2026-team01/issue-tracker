@@ -2,14 +2,17 @@ package com.codesquad_team01.issue_tracker.label.controller;
 
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
 import com.codesquad_team01.issue_tracker.label.service.LabelService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping("/api/labels")
 public class LabelController {
     private final LabelService labelService;
@@ -27,8 +30,15 @@ public class LabelController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<LabelAddResponse> addLabel(@Valid @RequestBody LabelAddRequest labelAddRequest) {
-        LabelAddResponse responseData = labelService.addLabel(labelAddRequest);
+    public ApiResponse<LabelDetailResponse> addLabel(@Valid @RequestBody LabelAddRequest labelAddRequest) {
+        LabelDetailResponse responseData = labelService.addLabel(labelAddRequest);
         return ApiResponse.success("레이블 추가 성공", responseData);
+    }
+
+    @GetMapping("/{labelId}")
+    public ApiResponse<LabelDetailResponse> getLabel(
+            @PathVariable @Min(value = 1, message = "ID는 1 이상의 양수여야 합니다.") Long labelId){
+
+        return ApiResponse.success("레이블 편집 불러오기 성공", labelService.findLabel(labelId));
     }
 }
