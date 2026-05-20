@@ -8,10 +8,7 @@ import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -40,6 +37,16 @@ public class CommentController {
         );
 
         return ApiResponse.success("댓글 작성 완료", data);
+    }
+
+    @PatchMapping("/api/issues/{issueId}/comments/{commentId}")
+    public ApiResponse<Void> updateComment(@PathVariable Long issueId,
+                                                      @PathVariable Long commentId,
+                                                      @RequestBody @Valid CommentRequest commentRequest) {
+
+        commentService.updateComment(issueId, commentId, commentRequest);
+
+        return ApiResponse.success("댓글 수정 완료", null);
     }
 }
 

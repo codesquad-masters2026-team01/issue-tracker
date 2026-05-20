@@ -44,4 +44,26 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
         return savedComment.getId();
     }
+
+    @Transactional
+    public void updateComment(Long issueId, Long commentId, CommentRequest commentRequest) {
+        if (issueId == null || issueId <= 0 || commentId == null || commentId <= 0) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
+
+        if (!comment.isSameIssue(issueId)) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        //TODO: 1L 인 부분 나중에 로그인 하면 받아오기
+        if (!comment.isAuthor(1L)) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        comment.changeContents(commentRequest.contents());
+
+        commentRepository.save(comment);
+    }
 }
