@@ -1,26 +1,9 @@
 import type { Comment as CommentType } from "../types/Issue";
+import { getRelativeTime } from "../utils/date";
 
 interface CommentItemProps {
     comment: CommentType;
     isMainContent?: boolean;
-}
-
-function getRelativeTime(timestamp: string) {
-    const now = new Date();
-    const past = new Date(timestamp);
-    const diffInMs = now.getTime() - past.getTime();
-
-    const seconds = Math.floor(diffInMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (seconds < 60) return "방금 전";
-    if (minutes < 60) return `${minutes}분 전`;
-    if (hours < 24) return `${hours}시간 전`;
-    if (days < 365) return `${days}일 전`;
-
-    return timestamp.split(' ')[0];
 }
 
 export default function CommentItem({ comment, isMainContent = false }: CommentItemProps) {
