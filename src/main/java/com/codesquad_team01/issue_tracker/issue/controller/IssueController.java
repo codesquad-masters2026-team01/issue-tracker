@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.issue.controller;
 
+import com.codesquad_team01.issue_tracker.issue.dto.request.IssueContentsRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueStatusRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueTitleUpdateRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueWriteRequest;
@@ -82,4 +83,13 @@ public class IssueController {
         return ApiResponse.success("이슈 제목 수정 성공", null);
     }
 
+    @PatchMapping("/api/issues/{issueId}/contents")
+    public ApiResponse<Void> updateIssueContents(
+            @PathVariable("issueId") Long issueId,
+            @RequestBody IssueContentsRequest issueContentsRequest) {
+
+        issueService.contentChange(issueId, issueContentsRequest.contents());
+
+        return ApiResponse.success("본문 내용 수정 성공", null);
+    }
 }

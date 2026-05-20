@@ -46,6 +46,10 @@ public class IssueService {
             throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
         }
 
+        if (status == null || (!status.equalsIgnoreCase("OPEN") && !status.equalsIgnoreCase("CLOSED"))) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
         Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
 
@@ -68,6 +72,20 @@ public class IssueService {
 
         issueRepository.save(issue);
 
+    }
+
+    @Transactional
+    public void contentChange(Long issueId, String content) {
+        if (issueId == null || issueId <= 0) {
+            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
+        }
+
+        Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
+
+        issue.changeContents(content);
+
+        issueRepository.save(issue);
     }
 
 
