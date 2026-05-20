@@ -1,7 +1,7 @@
 package com.codesquad_team01.issue_tracker.issue.service;
 
 import com.codesquad_team01.issue_tracker.comment.domain.Comment;
-import com.codesquad_team01.issue_tracker.comment.dto.CommentResponse;
+import com.codesquad_team01.issue_tracker.comment.dto.response.CommentResponse;
 import com.codesquad_team01.issue_tracker.comment.repository.CommentRepository;
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueDetailResponse;
