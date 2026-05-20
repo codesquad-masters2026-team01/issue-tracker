@@ -1,6 +1,8 @@
 package com.codesquad_team01.issue_tracker.label.service;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
+import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
@@ -19,7 +21,7 @@ public class LabelService {
         this.milestoneRepository = milestoneRepository;
     }
 
-    public LabelPageResponse getLabelPageResponse(){
+    public LabelPageResponse getLabels(){
         List<Label> labels = labelRepository.findAll();
         long milestoneCount = milestoneRepository.count();
 
@@ -33,5 +35,11 @@ public class LabelService {
         return labels.stream()
                 .map(LabelListResponse::from)
                 .toList();
+    }
+
+    public LabelAddResponse addLabel(LabelAddRequest labelAddRequest){
+        Label before = labelAddRequest.toLabel();
+        Label after = labelRepository.save(before);
+        return LabelAddResponse.labelToResponse(after);
     }
 }

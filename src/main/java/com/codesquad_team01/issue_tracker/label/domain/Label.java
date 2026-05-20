@@ -17,8 +17,7 @@ public class Label {
     private String backgroundColor;
     private LocalDateTime deletedAt;
 
-    public Label(Long id ,String name, String description, String textColor, String backgroundColor
-    , LocalDateTime deletedAt) {
+    public Label(Long id ,String name, String description, String textColor, String backgroundColor, LocalDateTime deletedAt) {
         this.id = id;
         this.name = name;
         this.description = description;

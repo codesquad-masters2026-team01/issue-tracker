@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.label.dto.request;
 
+import com.codesquad_team01.issue_tracker.label.domain.Label;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -21,4 +22,9 @@ public record LabelAddRequest (
         @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "올바른 색상 코드 형식이 아닙니다. (예: #004DE3)")
         String backgroundColor
 
-){}
+){
+
+    public Label toLabel(){
+        return new Label(null, this.name(), this.description(), this.textColor(), this.backgroundColor(), null);
+    }
+}

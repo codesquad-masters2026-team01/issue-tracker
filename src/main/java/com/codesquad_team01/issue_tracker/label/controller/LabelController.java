@@ -21,7 +21,7 @@ public class LabelController {
     // TODO: 레이블 정렬(가장 최근 생긴 레이블이 위로 간다), 삭제된 인스턴스 고려
     @GetMapping
     public ApiResponse<LabelPageResponse> getLabels() {
-        LabelPageResponse responseData = labelService.getLabelPageResponse();
+        LabelPageResponse responseData = labelService.getLabels();
         return ApiResponse.success("레이블 페이지 로딩 성공", responseData);
     }
 
