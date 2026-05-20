@@ -1,7 +1,7 @@
 package com.codesquad_team01.issue_tracker.label.controller;
 
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
@@ -80,7 +80,7 @@ public class LabelControllerTest {
                 "#004DE3"
         );
 
-        LabelAddResponse mockResponseDto = new LabelAddResponse(
+        LabelDetailResponse mockResponseDto = new LabelDetailResponse(
                 4L,
                 "documentation",
                 "서비스에 대한 개선 사항 또는 추가 사항",
@@ -110,5 +110,27 @@ public class LabelControllerTest {
         assertThat(capturedRequest.description()).isEqualTo("서비스에 대한 개선 사항 또는 추가 사항");
         assertThat(capturedRequest.textColor()).isEqualTo("#000000");
         assertThat(capturedRequest.backgroundColor()).isEqualTo("#004DE3");
+    }
+
+    @Test
+    @DisplayName("GET /api/labels/{labelId} 로의 요청이 왔을 때, 성공적으로 해당 레이블의 정보를 DTO로 반환한다.")
+    public void getLabelTest() throws Exception {
+        Long id = 4L;
+        LabelDetailResponse mockResponseDto
+                = new LabelDetailResponse(4L, "bug", "버그 발생", "#000000", "#FCFBFB");
+
+        given(labelService.findLabel(id)).willReturn(mockResponseDto);
+
+        mockMvc.perform(
+                get("/api/labels/4")
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("레이블 편집 불러오기 성공"))
+                .andExpect(jsonPath("$.data.id").value(4L))
+                .andExpect(jsonPath("$.data.name").value("bug"))
+                .andExpect(jsonPath("$.data.description").value("버그 발생"))
+                .andExpect(jsonPath("$.data.textColor").value("#000000"))
+                .andExpect(jsonPath("$.data.backgroundColor").value("#FCFBFB"));
     }
 }

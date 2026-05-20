@@ -2,7 +2,7 @@ package com.codesquad_team01.issue_tracker.label.service;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
@@ -63,7 +63,7 @@ public class LabelServiceTest {
 
         given(labelRepository.save(any(Label.class))).willReturn(savedEntity);
 
-        LabelAddResponse responseDto = labelService.addLabel(requestDto);
+        LabelDetailResponse responseDto = labelService.addLabel(requestDto);
 
         assertThat(responseDto.id()).isEqualTo(4L);
         assertThat(responseDto.name()).isEqualTo("bug");
