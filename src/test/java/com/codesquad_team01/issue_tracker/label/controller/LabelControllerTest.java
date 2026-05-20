@@ -1,6 +1,5 @@
-package com.codesquad_team01.issue_tracker.label;
+package com.codesquad_team01.issue_tracker.label.controller;
 
-import com.codesquad_team01.issue_tracker.label.controller.LabelController;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
@@ -52,7 +51,7 @@ public class LabelControllerTest {
 
         LabelPageResponse mockResponse = new LabelPageResponse(labelMetaData, labels);
 
-        given(labelService.getLabelPageResponse()).willReturn(mockResponse);
+        given(labelService.getLabels()).willReturn(mockResponse);
 
         // 프론트엔드에게 전달할 JSON 데이터 명세
         mockMvc.perform(

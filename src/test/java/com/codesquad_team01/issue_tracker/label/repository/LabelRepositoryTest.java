@@ -1,7 +1,6 @@
-package com.codesquad_team01.issue_tracker.label;
+package com.codesquad_team01.issue_tracker.label.repository;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
-import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
