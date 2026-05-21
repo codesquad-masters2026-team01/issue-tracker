@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Validated
+@Validated // TODO: @Min 중복 제거 코드 필요 -> api로 넘어오는 id는 모두 양수여야 하기 때문이다.
 @RequestMapping("/api/labels")
 public class LabelController {
     private final LabelService labelService;
