@@ -228,6 +228,63 @@ export default function IssueDetailPage() {
         }
     };
 
+    const handleAssigneesUpdate = async (assigneeIds: number[]) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/issues/${id}/assignees`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ assigneeIds })
+            });
+            const result = await response.json();
+            if (result.success) {
+                const updatedAssignees = allMembers.filter(m => assigneeIds.includes(m.id));
+                setIssue(prev => prev ? { ...prev, assignees: updatedAssignees } : null);
+            } else {
+                alert("담당자 수정 실패: " + result.message);
+            }
+        } catch (error) {
+            console.error("담당자 수정 중 오류 발생:", error);
+        }
+    };
+
+    const handleLabelsUpdate = async (labelIds: number[]) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/issues/${id}/labels`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ labelIds })
+            });
+            const result = await response.json();
+            if (result.success) {
+                const updatedLabels = allLabels.filter(l => labelIds.includes(l.id));
+                setIssue(prev => prev ? { ...prev, labels: updatedLabels } : null);
+            } else {
+                alert("레이블 수정 실패: " + result.message);
+            }
+        } catch (error) {
+            console.error("레이블 수정 중 오류 발생:", error);
+        }
+    };
+
+    const handleMilestoneUpdate = async (milestoneId: number | null) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/issues/${id}/milestone`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ milestoneId })
+            });
+            const result = await response.json();
+            if (result.success) {
+                const updatedMilestone = allMilestones.find(m => m.id === milestoneId) || null;
+                setIssue(prev => prev ? { ...prev, milestone: updatedMilestone } : null);
+            } else {
+                alert("마일스톤 수정 실패: " + result.message);
+            }
+        } catch (error) {
+            console.error("마일스톤 수정 중 오류 발생:", error);
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-[calc(100vh-64px)]">
@@ -293,6 +350,9 @@ export default function IssueDetailPage() {
                     allLabels={allLabels}
                     allMilestones={allMilestones}
                     onDelete={handleDelete}
+                    onAssigneesUpdate={handleAssigneesUpdate}
+                    onLabelsUpdate={handleLabelsUpdate}
+                    onMilestoneUpdate={handleMilestoneUpdate}
                 />
             </div>
         </main>

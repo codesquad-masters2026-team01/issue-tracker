@@ -7,6 +7,9 @@ interface IssueDetailSidebarProps {
     allLabels: Label[];
     allMilestones: Milestone[];
     onDelete: () => void;
+    onAssigneesUpdate: (assigneeIds: number[]) => Promise<void>;
+    onLabelsUpdate: (labelIds: number[]) => Promise<void>;
+    onMilestoneUpdate: (milestoneId: number | null) => Promise<void>;
 }
 
 // 공통 체크 아이콘
@@ -24,8 +27,32 @@ export default function IssueDetailSidebar({
     allMembers,
     allLabels,
     allMilestones,
-    onDelete
+    onDelete,
+    onAssigneesUpdate,
+    onLabelsUpdate,
+    onMilestoneUpdate
 }: IssueDetailSidebarProps) {
+    const handleToggleAssignee = (memberId: number) => {
+        const currentIds = issue.assignees.map(a => a.id);
+        const newIds = currentIds.includes(memberId)
+            ? currentIds.filter(id => id !== memberId)
+            : [...currentIds, memberId];
+        void onAssigneesUpdate(newIds);
+    };
+
+    const handleToggleLabel = (labelId: number) => {
+        const currentIds = issue.labels.map(l => l.id);
+        const newIds = currentIds.includes(labelId)
+            ? currentIds.filter(id => id !== labelId)
+            : [...currentIds, labelId];
+        void onLabelsUpdate(newIds);
+    };
+
+    const handleToggleMilestone = (milestoneId: number) => {
+        const newId = issue.milestone?.id === milestoneId ? null : milestoneId;
+        void onMilestoneUpdate(newId);
+    };
+
     return (
         <div className="w-80 flex flex-col gap-2">
             <aside className="flex flex-col h-fit bg-white border border-slate-200 rounded-xl shadow-sm">
@@ -39,6 +66,7 @@ export default function IssueDetailSidebar({
                                 {allMembers.map(member => (
                                     <button
                                         key={member.id}
+                                        onClick={() => handleToggleAssignee(member.id)}
                                         className="w-full h-[44px] px-4 py-2 bg-[#FEFEFE] hover:bg-[#F7F7FC] flex items-center justify-between transition-colors"
                                     >
                                         <span className={`text-[16px] text-[#14142B] ${issue.assignees.some(a => a.id === member.id) ? 'font-bold' : 'font-medium'}`}>{member.name}</span>
@@ -76,6 +104,7 @@ export default function IssueDetailSidebar({
                                 {allLabels.map(label => (
                                     <button
                                         key={label.id}
+                                        onClick={() => handleToggleLabel(label.id)}
                                         className="w-full h-[44px] px-4 py-2 bg-[#FEFEFE] hover:bg-[#F7F7FC] flex items-center justify-between transition-colors"
                                     >
                                         <div className="flex items-center gap-2">
@@ -115,6 +144,7 @@ export default function IssueDetailSidebar({
                                 {allMilestones.map(ms => (
                                     <button
                                         key={ms.id}
+                                        onClick={() => handleToggleMilestone(ms.id)}
                                         className="w-full h-[44px] px-4 py-2 bg-[#FEFEFE] hover:bg-[#F7F7FC] flex items-center justify-between transition-colors"
                                     >
                                         <span className={`text-[16px] text-[#14142B] ${issue.milestone?.id === ms.id ? 'font-bold' : 'font-medium'}`}>{ms.name}</span>
