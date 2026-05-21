@@ -2,7 +2,7 @@ package com.codesquad_team01.issue_tracker.label.service;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelAddResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
@@ -37,9 +37,15 @@ public class LabelService {
                 .toList();
     }
 
-    public LabelAddResponse addLabel(LabelAddRequest labelAddRequest){
+    public LabelDetailResponse addLabel(LabelAddRequest labelAddRequest){
         Label before = labelAddRequest.toLabel();
         Label after = labelRepository.save(before);
-        return LabelAddResponse.labelToResponse(after);
+        return LabelDetailResponse.labelToResponse(after);
+    }
+
+    public LabelDetailResponse findLabel(Long id){
+        // TODO: 임시 예외 발생 -> 추후 커스텀 예외로 변경(레이블이 존재하지 않음)
+        Label result = labelRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return LabelDetailResponse.labelToResponse(result);
     }
 }
