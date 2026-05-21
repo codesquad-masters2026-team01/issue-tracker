@@ -1,9 +1,6 @@
-package com.codesquad_team01.issue_tracker.issue.service;
+package com.codesquad_team01.issue_tracker.issue.dto.mapper;
 
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
-import com.codesquad_team01.issue_tracker.issue.dto.mapper.AuthorDtoMapper;
-import com.codesquad_team01.issue_tracker.issue.dto.mapper.LabelDtoMapper;
-import com.codesquad_team01.issue_tracker.issue.dto.mapper.MilestoneDtoMapper;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelResponse;
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;

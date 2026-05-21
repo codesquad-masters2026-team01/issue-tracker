@@ -2,6 +2,7 @@ package com.codesquad_team01.issue_tracker.issue.service;
 
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.domain.IssueStatus;
+import com.codesquad_team01.issue_tracker.issue.dto.mapper.IssueDtoMapper;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
