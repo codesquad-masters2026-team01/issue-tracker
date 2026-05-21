@@ -48,7 +48,7 @@ public class LabelService {
 
     public LabelDetailResponse updateLabel(Long id, LabelUpdateRequest labelUpdateRequest){
         // 기존 라벨 불러오기
-        Label before = labelRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Label before = labelRepository.findLabelNotDeleted(id).orElseThrow(IllegalArgumentException::new);
         Label after = labelUpdateRequest.toLabel(before);
         labelRepository.save(after);
         return LabelDetailResponse.labelToResponse(after);

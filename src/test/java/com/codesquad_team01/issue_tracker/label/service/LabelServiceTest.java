@@ -112,7 +112,7 @@ public class LabelServiceTest {
         Long targetId = 2L;
         Label existingLabel = new Label(targetId, "feat", "새로운 기능 추가", "#000000",
                 "#00FF00", null);
-        given(labelRepository.findById(targetId)).willReturn(Optional.of(existingLabel));
+        given(labelRepository.findLabelNotDeleted(targetId)).willReturn(Optional.of(existingLabel));
 
         // 수정 요청: 이름만 "bug"로 변경, 나머지는 안 보냄 (null)
         LabelUpdateRequest requestDto = new LabelUpdateRequest("bug", null, null, null);
