@@ -20,7 +20,7 @@ public class LabelService {
     }
 
     public LabelPageResponse getLabels(){
-        List<Label> labels = labelRepository.findAllByDeletedAtIsNull();
+        List<Label> labels = labelRepository.findAllLabelsNotDeleted();
         long milestoneCount = milestoneRepository.count(); // TODO: 추후 삭제된 마일스톤 거르는 쿼리를 보내도록 변경
 
         LabelMetaData labelMetaData = new LabelMetaData(labels.size(), milestoneCount);

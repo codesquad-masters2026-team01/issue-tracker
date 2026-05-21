@@ -45,7 +45,7 @@ public class LabelServiceTest {
         );
         long dummyMilestoneCount = 2L; // TODO: 추후 삭제된 마일스톤은 포함하지 않는 쿼리를 보냈고 그 결과를 받은 거이어야 함
 
-        given(labelRepository.findAllByDeletedAtIsNull()).willReturn(dummyLabels);
+        given(labelRepository.findAllLabelsNotDeleted()).willReturn(dummyLabels);
         given(milestoneRepository.count()).willReturn(dummyMilestoneCount);
 
         LabelPageResponse labelPageResponse = labelService.getLabels();

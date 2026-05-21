@@ -22,5 +22,9 @@ public interface LabelRepository extends ListCrudRepository<Label, Long> {
 
     long countByDeletedAtIsNull();
 
-    List<Label> findAllByDeletedAtIsNull();
+    @Query("SELECT id, name, description, text_color, background_color " +
+            "FROM label " +
+            "WHERE deleted_at IS NULL " +
+            "ORDER BY id DESC;")
+    List<Label> findAllLabelsNotDeleted();
 }
