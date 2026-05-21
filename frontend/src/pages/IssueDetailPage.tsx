@@ -16,10 +16,6 @@ export default function IssueDetailPage() {
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");
 
-    // 본문 편집 상태
-    const [isEditingContents, setIsEditingContents] = useState(false);
-    const [editedContents, setEditedContents] = useState("");
-
     // 서버 데이터 상태 (사이드바 드롭다운용)
     const [allMembers, setAllMembers] = useState<User[]>([]);
     const [allLabels, setAllLabels] = useState<Label[]>([]);
@@ -34,7 +30,6 @@ export default function IssueDetailPage() {
                 if (result.success) {
                     setIssue(result.data);
                     setEditedTitle(result.data.title);
-                    setEditedContents(result.data.contents);
                 } else {
                     alert(result.message);
                     navigate("/");
@@ -150,9 +145,8 @@ export default function IssueDetailPage() {
         }
     };
 
-    const handleContentsUpdate = async () => {
-        if (!issue || !editedContents.trim() || editedContents === issue.contents) {
-            setIsEditingContents(false);
+    const handleContentsUpdate = async (_id: number, contents: string) => {
+        if (!issue || contents === issue.contents) {
             return;
         }
 
@@ -162,18 +156,47 @@ export default function IssueDetailPage() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ contents: editedContents })
+                body: JSON.stringify({ contents: contents })
             });
             const result = await response.json();
 
             if (result.success) {
-                setIssue(prev => prev ? { ...prev, contents: editedContents } : null);
-                setIsEditingContents(false);
+                setIssue(prev => prev ? { ...prev, contents: contents } : null);
             } else {
                 alert("본문 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("본문 수정 중 오류 발생:", error);
+            alert("처리 중 오류가 발생했습니다.");
+        }
+    };
+
+    const handleCommentUpdate = async (commentId: number, contents: string) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/issues/${id}/comments/${commentId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ contents })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                setIssue(prev => {
+                    if (!prev) return null;
+                    return {
+                        ...prev,
+                        comments: prev.comments.map(c => 
+                            c.id === commentId ? { ...c, contents } : c
+                        )
+                    };
+                });
+            } else {
+                alert("댓글 수정 실패: " + result.message);
+            }
+        } catch (error) {
+            console.error("댓글 수정 중 오류 발생:", error);
             alert("처리 중 오류가 발생했습니다.");
         }
     };
@@ -247,20 +270,16 @@ export default function IssueDetailPage() {
                             createdAt: issue.createdAt,
                             isIssueAuthor: true
                         }}
-                        isEditing={isEditingContents}
-                        editedContents={editedContents}
-                        onEditClick={() => setIsEditingContents(true)}
-                        onCancelEdit={() => {
-                            setIsEditingContents(false);
-                            setEditedContents(issue.contents);
-                        }}
                         onSaveEdit={handleContentsUpdate}
-                        onContentsChange={setEditedContents}
                     />
                     
                     <div className="flex flex-col">
                         {issue.comments.map(comment => (
-                            <CommentItem key={comment.id} comment={comment} />
+                            <CommentItem 
+                                key={comment.id} 
+                                comment={comment} 
+                                onSaveEdit={handleCommentUpdate}
+                            />
                         ))}
                     </div>
 

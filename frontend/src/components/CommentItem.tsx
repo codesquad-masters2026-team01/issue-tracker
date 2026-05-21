@@ -1,28 +1,35 @@
+import { useState } from "react";
 import type { Comment as CommentType } from "../types/Issue";
 import { getRelativeTime } from "../utils/date";
 
 interface CommentItemProps {
     comment: CommentType;
     isMainContent?: boolean;
-    isEditing?: boolean;
-    editedContents?: string;
-    onEditClick?: () => void;
-    onCancelEdit?: () => void;
-    onSaveEdit?: () => void;
-    onContentsChange?: (value: string) => void;
+    onSaveEdit?: (id: number, contents: string) => Promise<void>;
 }
 
 export default function CommentItem({
     comment,
     isMainContent = false,
-    isEditing = false,
-    editedContents = "",
-    onEditClick,
-    onCancelEdit,
-    onSaveEdit,
-    onContentsChange
+    onSaveEdit
 }: CommentItemProps) {
-    const { author, contents, createdAt, isIssueAuthor } = comment;
+    const { id, author, contents, createdAt, isIssueAuthor } = comment;
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedContents, setEditedContents] = useState(contents);
+
+    const handleSave = async () => {
+        if (!onSaveEdit || editedContents === contents) {
+            setIsEditing(false);
+            return;
+        }
+        await onSaveEdit(id, editedContents);
+        setIsEditing(false);
+    };
+
+    const handleCancel = () => {
+        setEditedContents(contents);
+        setIsEditing(false);
+    };
 
     return (
         <div className={`flex gap-4 mb-8 ${isMainContent ? 'relative' : ''}`}>
@@ -58,9 +65,9 @@ export default function CommentItem({
                             )}
                         </div>
 
-                        {isMainContent && !isEditing && onEditClick && (
+                        {!isEditing && onSaveEdit && (
                             <button
-                                onClick={onEditClick}
+                                onClick={() => setIsEditing(true)}
                                 className="flex items-center gap-1 text-slate-400 hover:text-[#007AFF] transition-colors"
                             >
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -78,20 +85,20 @@ export default function CommentItem({
                         <div className="flex flex-col gap-4">
                             <textarea
                                 value={editedContents}
-                                onChange={(e) => onContentsChange?.(e.target.value)}
+                                onChange={(e) => setEditedContents(e.target.value)}
                                 className="w-full min-h-[200px] p-4 bg-slate-50 border border-slate-200 rounded-lg text-base focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#007AFF]/20 transition-all resize-none"
                                 placeholder="코멘트를 입력하세요"
                             />
                             <div className="flex justify-end gap-2">
                                 <button
-                                    onClick={onCancelEdit}
+                                    onClick={handleCancel}
                                     className="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                                 >
                                     편집 취소
                                 </button>
                                 <button
-                                    onClick={onSaveEdit}
-                                    disabled={!editedContents.trim()}
+                                    onClick={handleSave}
+                                    disabled={!isMainContent && !editedContents.trim()}
                                     className="px-4 py-2 text-sm font-bold text-white bg-[#007AFF] hover:bg-[#0062CC] disabled:bg-slate-300 rounded-lg transition-colors"
                                 >
                                     편집 완료
@@ -99,8 +106,8 @@ export default function CommentItem({
                             </div>
                         </div>
                     ) : (
-                        <div className={`text-[#4E4B66] leading-relaxed whitespace-pre-wrap ${isMainContent ? 'text-lg' : 'text-base'}`}>
-                            {contents}
+                        <div className={`leading-relaxed whitespace-pre-wrap ${isMainContent ? 'text-lg' : 'text-base'} ${!contents ? 'text-slate-400 italic' : 'text-[#4E4B66]'}`}>
+                            {contents || "No description provided."}
                         </div>
                     )}
                 </div>
