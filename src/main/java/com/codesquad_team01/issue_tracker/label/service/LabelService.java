@@ -42,7 +42,7 @@ public class LabelService {
 
     public LabelDetailResponse findLabel(Long id){
         // TODO: 임시 예외 발생 -> 추후 커스텀 예외로 변경(레이블이 존재하지 않음)
-        Label result = labelRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Label result = labelRepository.findLabelNotDeleted(id).orElseThrow(IllegalArgumentException::new);
         return LabelDetailResponse.labelToResponse(result);
     }
 

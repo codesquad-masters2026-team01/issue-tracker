@@ -81,7 +81,7 @@ public class LabelServiceTest {
         Label mockLabel
                 = new Label(4L, "bug", "버그 발생", "#000000", "#111111", null);
 
-        given(labelRepository.findById(any(Long.class))).willReturn(Optional.of(mockLabel));
+        given(labelRepository.findLabelNotDeleted(any(Long.class))).willReturn(Optional.of(mockLabel));
 
         LabelDetailResponse responseDto = labelService.findLabel(4L);
 
