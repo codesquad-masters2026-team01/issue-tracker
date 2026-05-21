@@ -1,6 +1,5 @@
 package com.codesquad_team01.issue_tracker.comment.service;
 
-
 import com.codesquad_team01.issue_tracker.comment.domain.Comment;
 import com.codesquad_team01.issue_tracker.comment.dto.request.CommentRequest;
 import com.codesquad_team01.issue_tracker.comment.repository.CommentRepository;
@@ -20,16 +19,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
 
-
-
-
     @Transactional
-    public Long createComment( Long issueId, CommentRequest commentRequest) {
-        if (issueId == null || issueId <= 0) {
-            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
-        }
+    public Long createComment(Long issueId, CommentRequest commentRequest) {
 
-        issueRepository.findByIdAndDeletedAtIsNull(issueId)
+        issueRepository.findActiveById(issueId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
 
         Comment comment = new Comment(
@@ -47,9 +40,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long issueId, Long commentId, CommentRequest commentRequest) {
-        if (issueId == null || issueId <= 0 || commentId == null || commentId <= 0) {
-            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
-        }
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
 
@@ -63,7 +54,6 @@ public class CommentService {
         }
 
         comment.changeContents(commentRequest.contents());
-
         commentRepository.save(comment);
     }
 }
