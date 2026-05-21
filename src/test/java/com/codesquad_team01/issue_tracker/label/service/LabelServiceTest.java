@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +43,9 @@ public class LabelServiceTest {
             new Label(1L, "레이블1", "설명1", "#000000", "#111111", null),
                 new Label(2L, "레이블2", "설명2", "#000000", "#111111", null)
         );
-        long dummyMilestoneCount = 2L;
+        long dummyMilestoneCount = 2L; // TODO: 추후 삭제된 마일스톤은 포함하지 않는 쿼리를 보냈고 그 결과를 받은 거이어야 함
 
-        given(labelRepository.findAll()).willReturn(dummyLabels);
+        given(labelRepository.findAllByDeletedAtIsNull()).willReturn(dummyLabels);
         given(milestoneRepository.count()).willReturn(dummyMilestoneCount);
 
         LabelPageResponse labelPageResponse = labelService.getLabels();

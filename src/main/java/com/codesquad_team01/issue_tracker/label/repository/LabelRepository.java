@@ -21,4 +21,6 @@ public interface LabelRepository extends ListCrudRepository<Label, Long> {
     List<LabelWithIssueId> findAllByIssueIdIn(List<Long> issueIds);
 
     long countByDeletedAtIsNull();
+
+    List<Label> findAllByDeletedAtIsNull();
 }
