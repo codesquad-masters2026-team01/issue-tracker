@@ -3,6 +3,7 @@ package com.codesquad_team01.issue_tracker.label.controller;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDeleteResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
 import com.codesquad_team01.issue_tracker.label.service.LabelService;
@@ -49,5 +50,12 @@ public class LabelController {
             @Valid @RequestBody LabelUpdateRequest labelUpdateRequest){
 
         return ApiResponse.success("레이블 편집 성공", labelService.updateLabel(labelId, labelUpdateRequest));
+    }
+
+    @DeleteMapping("/{labelId}")
+    public ApiResponse<LabelDeleteResponse> deleteLabel(
+        @PathVariable @Min(value = 1, message = "ID는 1 이상의 양수여야 합니다.") Long labelId){
+
+        return ApiResponse.success("레이블 삭제 성공", labelService.deleteLabel(labelId));
     }
 }
