@@ -1,13 +1,12 @@
 package com.codesquad_team01.issue_tracker.issue.service;
 
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
+import com.codesquad_team01.issue_tracker.issue.domain.IssueStatus;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
-import com.codesquad_team01.issue_tracker.global.exception.ErrorCode;
-import com.codesquad_team01.issue_tracker.global.exception.IssueTrackerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +30,10 @@ public class IssueService {
     }
 
     @Transactional
-    public void patchIssue(Long issueId, String status) {
+    public void patchIssue(Long issueId, IssueStatus status) {
 
-        if (status == null || (!status.equalsIgnoreCase("OPEN") && !status.equalsIgnoreCase("CLOSED"))) {
-            throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
-        }
         Issue issue = issueRepository.getOrThrow(issueId);
-        boolean isOpened = status.equalsIgnoreCase("OPEN");
+        boolean isOpened = (status == IssueStatus.OPEN);
         issue.changeStatus(isOpened);
         issueRepository.save(issue);
     }
@@ -74,8 +70,8 @@ public class IssueService {
     }
 
     private IssueListResponse.Metadata createMetadata() {
-        long openIssueCount = issueRepository.countByIsOpenedAndDeletedAtIsNull(true);
-        long closedIssueCount = issueRepository.countByIsOpenedAndDeletedAtIsNull(false);
+        long openIssueCount = issueRepository.countByStatus(true);
+        long closedIssueCount = issueRepository.countByStatus(false);
         long labelCount = labelRepository.countByDeletedAtIsNull();
         long milestoneCount = milestoneRepository.countByDeletedAtIsNull();
 

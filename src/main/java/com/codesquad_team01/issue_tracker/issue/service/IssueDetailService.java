@@ -37,7 +37,7 @@ public class IssueDetailService {
             throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
         }
 
-        Issue issue = issueRepository.findByIdAndDeletedAtIsNull(issueId)
+        Issue issue = issueRepository.findActiveById(issueId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
 
         List<Comment> comments = commentRepository.findByIssueIdAndDeletedAtIsNullOrderByIdAsc(issue.getId());
@@ -62,8 +62,8 @@ public class IssueDetailService {
             Milestone milestone = milestoneRepository.findById(issue.getMilestoneId())
                     .orElseThrow(() -> new IllegalArgumentException("Milestone not found!"));
 
-            int totalCount = issueRepository.countByMilestoneIdAndDeletedAtIsNull(issue.getMilestoneId());
-            int closedIssueCount = issueRepository.countByMilestoneIdAndIsOpenedAndDeletedAtIsNull
+            int totalCount = issueRepository.countByMilestoneId(issue.getMilestoneId());
+            int closedIssueCount = issueRepository.countByMilestoneIdAndStatus
                     (issue.getMilestoneId(), false);
 
             int progress = 0;

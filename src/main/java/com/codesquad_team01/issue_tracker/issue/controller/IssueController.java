@@ -63,7 +63,7 @@ public class IssueController {
 
     @PatchMapping("/api/issues/{issueId}")
     public ApiResponse<Void> patchIssue(@PathVariable("issueId") @Positive Long issueId,
-                                        @RequestBody IssueStatusRequest issueStatusRequest) {
+                                        @RequestBody @Valid IssueStatusRequest issueStatusRequest) {
 
         issueService.patchIssue(issueId, issueStatusRequest.status());
         return ApiResponse.success("이슈 닫기 성공", null);
