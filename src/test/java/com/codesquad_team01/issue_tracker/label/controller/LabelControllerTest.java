@@ -1,12 +1,8 @@
 package com.codesquad_team01.issue_tracker.label.controller;
 
-import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.*;
 import com.codesquad_team01.issue_tracker.label.service.LabelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -27,9 +23,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -126,7 +120,7 @@ public class LabelControllerTest {
         given(labelService.findLabel(id)).willReturn(mockResponseDto);
 
         mockMvc.perform(
-                get("/api/labels/4")
+                get("/api/labels/{labelId}", id)
         )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -140,7 +134,7 @@ public class LabelControllerTest {
 
     @Test
     @DisplayName("PATCH /api/labels/{labelId} 요청이 오면 레이블이 수정되고 성공 응답을 반환한다.")
-    public void updateLabel_Controller_Test() throws Exception {
+    public void updateLabelTest() throws Exception {
         // given
         Long targetId = 2L;
         // 프론트엔드가 보낼 JSON 바디 (이름과 설명만 수정)
@@ -170,5 +164,24 @@ public class LabelControllerTest {
                 .andExpect(jsonPath("$.data.description").value("버그발생"))
                 .andExpect(jsonPath("$.data.textColor").value("#000000"))
                 .andExpect(jsonPath("$.data.backgroundColor").value("#00FF00"));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/labels/{labelId} 요청이 오면 레이블이 성공적으로 삭제 처리되고(soft) 성공 응답을 반환한다.")
+    public void deleteLabelTest() throws Exception {
+        // given
+        Long targetId = 2L;
+        LabelDeleteResponse mockResponse = new LabelDeleteResponse(targetId);
+
+        given(labelService.deleteLabel(targetId)).willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(
+                delete("/api/labels/{labelId}", targetId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("레이블 삭제 성공"))
+                .andExpect(jsonPath("$.data.deletedId").value(targetId));
     }
 }
