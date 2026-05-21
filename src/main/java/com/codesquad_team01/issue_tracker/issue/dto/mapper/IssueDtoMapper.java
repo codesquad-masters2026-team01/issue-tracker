@@ -2,9 +2,12 @@ package com.codesquad_team01.issue_tracker.issue.dto.mapper;
 
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
+import com.codesquad_team01.issue_tracker.label.dto.mapper.LabelDtoMapper;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelResponse;
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
+import com.codesquad_team01.issue_tracker.member.dto.mapper.AuthorDtoMapper;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneResponse;
+import com.codesquad_team01.issue_tracker.milestone.dto.mapper.MilestoneDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -4,15 +4,12 @@ import com.codesquad_team01.issue_tracker.comment.dto.request.CommentRequest;
 import com.codesquad_team01.issue_tracker.comment.dto.response.CommentResponse;
 import com.codesquad_team01.issue_tracker.comment.service.CommentService;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
-import com.codesquad_team01.issue_tracker.issue.dto.mapper.CommentDtoMapper;
-import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
+import com.codesquad_team01.issue_tracker.comment.dto.mapper.CommentDtoMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor

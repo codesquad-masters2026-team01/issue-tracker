@@ -1,4 +1,4 @@
-package com.codesquad_team01.issue_tracker.issue.dto.mapper;
+package com.codesquad_team01.issue_tracker.comment.dto.mapper;
 
 import com.codesquad_team01.issue_tracker.comment.domain.Comment;
 import com.codesquad_team01.issue_tracker.comment.dto.response.CommentResponse;
