@@ -3,10 +3,7 @@ package com.codesquad_team01.issue_tracker.label.service;
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelListResponse;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
+import com.codesquad_team01.issue_tracker.label.dto.response.*;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
@@ -55,5 +52,11 @@ public class LabelService {
         Label after = labelUpdateRequest.toLabel(before);
         labelRepository.save(after);
         return LabelDetailResponse.labelToResponse(after);
+    }
+
+    public LabelDeleteResponse deleteLabel(Long id){
+        Label LabelToBeDeleted = labelRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        LabelToBeDeleted.deleteLabel();
+        return LabelDeleteResponse.from(labelRepository.save(LabelToBeDeleted));
     }
 }
