@@ -3,6 +3,7 @@ package com.codesquad_team01.issue_tracker.label.service;
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
+import com.codesquad_team01.issue_tracker.label.dto.response.LabelDeleteResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
@@ -10,6 +11,7 @@ import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneReposito
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,7 +108,7 @@ public class LabelServiceTest {
 
     @Test
     @DisplayName("PATCH /api/labels/{labelId} : 일부 필드만 수정 요청이 오면, 나머지 필드는 기존 값을 유지하며 업데이트된다.")
-    public void updateLabel_PartialUpdate_Test() {
+    public void updateLabelTest() {
         // given: DB에 저장되어 있던 기존 라벨 상태
         Long targetId = 2L;
         Label existingLabel = new Label(targetId, "feat", "새로운 기능 추가", "#000000",
@@ -113,8 +117,9 @@ public class LabelServiceTest {
 
         // 수정 요청: 이름만 "bug"로 변경, 나머지는 안 보냄 (null)
         LabelUpdateRequest requestDto = new LabelUpdateRequest("bug", null, null, null);
-
+        
         // save() 호출 시, 병합된 새 객체를 반환하도록 설정
+        // save()의 파라미터로 들어간 Label 객체를 반환
         given(labelRepository.save(any(Label.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when: 서비스의 업데이트 메서드 실행
@@ -126,5 +131,27 @@ public class LabelServiceTest {
         assertThat(response.description()).isEqualTo("새로운 기능 추가"); // 유지됨
         assertThat(response.textColor()).isEqualTo("#000000"); // 유지됨
         assertThat(response.backgroundColor()).isEqualTo("#00FF00"); // 유지됨
+    }
+
+    @Test
+    @DisplayName("DELETE /api/labels/{labelId} : labelId에 해당하는 Label 값이 DB에 존재하면, deletedAt에 값을 넣어주고(현재 시간)" +
+            "save()를 통해 DB를 최신화한다.")
+
+    public void deleteLabelTest() {
+        Long targetId = 2L;
+        Label existingLabel = new Label(targetId, "feat", "새로운 기능 추가", "#000000",
+                "#00FF00", null);
+        given(labelRepository.findById(targetId)).willReturn(Optional.of(existingLabel));
+        given(labelRepository.save(any(Label.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        LabelDeleteResponse response = labelService.deleteLabel(targetId);
+
+        assertThat(response.deletedId()).isEqualTo(targetId);
+
+        ArgumentCaptor<Label> labelCaptor = ArgumentCaptor.forClass(Label.class);
+        verify(labelRepository).save(labelCaptor.capture());
+
+        Label capturedLabel = labelCaptor.getValue();
+        assertThat(capturedLabel.getDeletedAt()).isNotNull();
     }
 }
