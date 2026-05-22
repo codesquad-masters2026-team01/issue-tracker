@@ -30,9 +30,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch("http://localhost:8080/api/members"),
-                    fetch("http://localhost:8080/api/labels"),
-                    fetch("http://localhost:8080/api/milestones")
+                    fetch("/api/members"),
+                    fetch("/api/labels"),
+                    fetch("/api/milestones")
                 ]);
 
                 const mResult = await mRes.json();
@@ -64,7 +64,7 @@ export default function IssueWritePage() {
                 contents: contents.trim(),
                 authorId: 1,
                 assigneeIds: selectedMemberIds,
-                labelsIds: selectedLabelIds,
+                labelIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
             };
 
@@ -72,7 +72,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch("http://localhost:8080/api/issues", {
+            const response = await fetch("/api/issues", {
                 method: "POST",
                 body: formData,
             });
