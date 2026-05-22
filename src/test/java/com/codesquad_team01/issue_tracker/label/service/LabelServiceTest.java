@@ -2,6 +2,7 @@ package com.codesquad_team01.issue_tracker.label.service;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
 import com.codesquad_team01.issue_tracker.label.dto.request.LabelAddRequest;
+import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelDetailResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelPageResponse;
 import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
@@ -100,4 +101,30 @@ public class LabelServiceTest {
 //                .isInstanceOf(IllegalArgumentException.class)
 //                .hasMessageContaining("존재하지 않는 레이블입니다.");
 //    }
+
+    @Test
+    @DisplayName("PATCH /api/labels/{labelId} : 일부 필드만 수정 요청이 오면, 나머지 필드는 기존 값을 유지하며 업데이트된다.")
+    public void updateLabel_PartialUpdate_Test() {
+        // given: DB에 저장되어 있던 기존 라벨 상태
+        Long targetId = 2L;
+        Label existingLabel = new Label(targetId, "feat", "새로운 기능 추가", "#000000",
+                "#00FF00", null);
+        given(labelRepository.findById(targetId)).willReturn(Optional.of(existingLabel));
+
+        // 수정 요청: 이름만 "bug"로 변경, 나머지는 안 보냄 (null)
+        LabelUpdateRequest requestDto = new LabelUpdateRequest("bug", null, null, null);
+
+        // save() 호출 시, 병합된 새 객체를 반환하도록 설정
+        given(labelRepository.save(any(Label.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        // when: 서비스의 업데이트 메서드 실행
+        LabelDetailResponse response = labelService.updateLabel(targetId, requestDto);
+
+        // then: 이름은 바뀌었고, 나머지는 기존 값을 유지해야 한다.
+        assertThat(response.id()).isEqualTo(2L);
+        assertThat(response.name()).isEqualTo("bug"); // 변경됨
+        assertThat(response.description()).isEqualTo("새로운 기능 추가"); // 유지됨
+        assertThat(response.textColor()).isEqualTo("#000000"); // 유지됨
+        assertThat(response.backgroundColor()).isEqualTo("#00FF00"); // 유지됨
+    }
 }
