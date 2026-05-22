@@ -113,7 +113,6 @@ public class IssueController {
     public ApiResponse<Void> updateIssueLabels(
             @PathVariable @Positive Long issueId,
             @RequestBody LabelsChangeIssueRequest request) {
-
         issueService.labelUpdate(issueId, request.labelIds());
 
         return ApiResponse.success("이슈 레이블 수정 완료", null);
