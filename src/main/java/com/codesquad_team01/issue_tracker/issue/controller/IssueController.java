@@ -10,7 +10,7 @@ import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
 import com.codesquad_team01.issue_tracker.issue.service.IssueDetailService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueWriteService;
-import com.codesquad_team01.issue_tracker.label.dto.request.LabelUpdateRequest;
+import com.codesquad_team01.issue_tracker.label.dto.request.LabelsChangeIssueRequest;
 import com.codesquad_team01.issue_tracker.member.dto.request.IssueAssigneesUpdateRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneUpdateRequest;
 import jakarta.validation.Valid;
@@ -112,14 +112,13 @@ public class IssueController {
     @PatchMapping("/api/issues/{issueId}/labels")
     public ApiResponse<Void> updateIssueLabels(
             @PathVariable @Positive Long issueId,
-            @RequestBody LabelUpdateRequest labelUpdateRequest) {
+            @RequestBody LabelsChangeIssueRequest request) {
 
-        issueService.labelUpdate(issueId, labelUpdateRequest.labelIds());
+        issueService.labelUpdate(issueId, request.labelIds());
 
         return ApiResponse.success("이슈 레이블 수정 완료", null);
     }
 
-    // IssueController.java에 추가
     @PatchMapping("/api/issues/{issueId}/assignees")
     public ApiResponse<Void> updateIssueAssignees(
             @PathVariable @Positive Long issueId,
